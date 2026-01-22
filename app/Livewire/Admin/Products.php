@@ -6,14 +6,18 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class Products extends Datatable
 {
     protected ?string $recordName = 'Product';
 
     public array $categoryOptions = [];
+    public ?string $imagePreviewPath = null;
+    public ?TemporaryUploadedFile $imageUpload = null;
 
     public function mount(): void
     {
@@ -122,6 +126,16 @@ class Products extends Datatable
                 'label' => __('Slug'),
                 'placeholder' => __('product-slug'),
             ],
+            'image_path' => [
+                'type' => 'file',
+                'label' => __('Image'),
+                'placeholder' => __('Upload a product image'),
+                'help' => __('PNG or JPG up to 2MB. Recommended square image.'),
+                'full_width' => true,
+                'preview' => $this->imagePreviewPath,
+                'binding' => 'imageUpload',
+                'error_key' => 'imageUpload',
+            ],
             'description' => [
                 'type' => 'textarea',
                 'label' => __('Description'),
@@ -178,6 +192,7 @@ class Products extends Datatable
             'formData.category_id' => ['nullable', Rule::exists('categories', 'id')],
             'formData.is_featured' => ['boolean'],
             'formData.is_active' => ['boolean'],
+            'imageUpload' => ['nullable', 'image', 'max:2048'],
         ];
     }
 
@@ -193,12 +208,15 @@ class Products extends Datatable
             'formData.category_id' => __('Category'),
             'formData.is_featured' => __('Featured'),
             'formData.is_active' => __('Active'),
+            'formData.image_path' => __('Image'),
+            'imageUpload' => __('Image'),
         ];
     }
 
     protected function createRecord(array $data): Model
     {
         $data = $this->ensureSlug($data);
+        $data = $this->handleImageUpload($data);
 
         return parent::createRecord($data);
     }
@@ -206,6 +224,7 @@ class Products extends Datatable
     protected function updateRecord(Model $record, array $data): Model
     {
         $data = $this->ensureSlug($data);
+        $data = $this->handleImageUpload($data, $record);
 
         return parent::updateRecord($record, $data);
     }
@@ -215,6 +234,44 @@ class Products extends Datatable
         if (empty($data['slug']) && ! empty($data['name'])) {
             $data['slug'] = Str::slug($data['name']);
         }
+
+        return $data;
+    }
+
+    public function openCreateModal(): void
+    {
+        parent::openCreateModal();
+        $this->imagePreviewPath = null;
+        $this->imageUpload = null;
+    }
+
+    public function openEditModal(int $recordId): void
+    {
+        parent::openEditModal($recordId);
+
+        if (! $this->showFormModal) {
+            return;
+        }
+
+        $record = $this->findRecord($recordId);
+        $this->imagePreviewPath = $record->image_url;
+        $this->imageUpload = null;
+    }
+
+    protected function handleImageUpload(array $data, ?Product $record = null): array
+    {
+        if (! $this->imageUpload instanceof TemporaryUploadedFile) {
+            return $data;
+        }
+
+        if ($record instanceof Product && $record->image_path && ! Str::startsWith($record->image_path, ['http://', 'https://', '/'])) {
+            Storage::disk('public')->delete($record->image_path);
+        }
+
+        $data['image_path'] = $this->imageUpload->store('product-images', 'public');
+        $this->formData['image_path'] = $data['image_path'];
+        $this->imagePreviewPath = Storage::disk('public')->url($data['image_path']);
+        $this->imageUpload = null;
 
         return $data;
     }

@@ -8,11 +8,13 @@ use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\EventCalendarController;
 use App\Http\Controllers\Shop\EventRegistrationController;
 use App\Http\Controllers\Shop\ProductController;
+use App\Http\Controllers\Shop\ProductReservationController;
 use App\Livewire\Admin\Categories as CategoriesPage;
 use App\Livewire\Admin\EventTypes as EventTypesPage;
 use App\Livewire\Admin\Events as EventsPage;
 use App\Livewire\Admin\EventRegistrations as EventRegistrationsPage;
 use App\Livewire\Admin\Products as ProductsPage;
+use App\Livewire\Admin\Reservations as ReservationsPage;
 use App\Livewire\Admin\ShopUsers as ShopUsersPage;
 use App\Livewire\Admin\StaffUsers as StaffUsersPage;
 use App\Models\Event;
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('productos/{product:slug}', [ProductController::class, 'show'])->name('shop.products.show');
+Route::post('productos/{product:slug}/reservations', [ProductReservationController::class, 'store'])
+    ->name('shop.products.reserve');
 Route::get('colecciones/{category:slug}', [CategoryController::class, 'show'])->name('shop.categories.show');
 Route::get('eventos', EventCalendarController::class)->name('shop.events.index');
 Route::post('eventos/{event:slug}/registro', [EventRegistrationController::class, 'store'])
@@ -75,6 +79,7 @@ Route::middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('categories', CategoriesPage::class)->name('categories.index');
         Route::get('products', ProductsPage::class)->name('products.index');
+        Route::get('reservations', ReservationsPage::class)->name('reservations.index');
         Route::get('events', EventsPage::class)->name('events.index');
         Route::get('event-types', EventTypesPage::class)->name('event-types.index');
         Route::get('shop-users', ShopUsersPage::class)->name('shop-users.index');

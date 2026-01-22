@@ -5,9 +5,9 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,8 +22,10 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
+        $this->ensureViewCachePathIsWritable();
+
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
@@ -46,5 +48,28 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+    }
+
+    protected function ensureViewCachePathIsWritable(): void
+    {
+        $defaultPath = storage_path('framework/views');
+
+        if (! is_dir($defaultPath)) {
+            @mkdir($defaultPath, 0755, true);
+        }
+
+        if (is_dir($defaultPath) && is_writable($defaultPath)) {
+            return;
+        }
+
+        $fallbackPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'mikrokosmos-views';
+
+        if (! is_dir($fallbackPath)) {
+            @mkdir($fallbackPath, 0777, true);
+        }
+
+        if (is_dir($fallbackPath) && is_writable($fallbackPath)) {
+            config(['view.compiled' => $fallbackPath]);
+        }
     }
 }

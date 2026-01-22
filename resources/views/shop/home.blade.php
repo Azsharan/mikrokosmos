@@ -98,6 +98,11 @@
                     @foreach ($featuredProducts as $product)
                         <a href="{{ route('shop.products.show', $product) }}" class="group block h-full" wire:navigate>
                             <article class="flex h-full flex-col justify-between rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-6 shadow-sm transition hover:-translate-y-1 hover:border-amber-200 hover:shadow-lg">
+                                @if ($product->image_url)
+                                    <div class="mb-4 overflow-hidden rounded-2xl bg-zinc-100">
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.03]">
+                                    </div>
+                                @endif
                                 <div class="space-y-4">
                                     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
                                         {{ $product->category?->name ?? __('Colección especial') }}

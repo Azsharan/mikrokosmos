@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 abstract class Datatable extends Component
 {
+    use WithFileUploads;
     use WithPagination;
 
     protected int $perPage = 10;

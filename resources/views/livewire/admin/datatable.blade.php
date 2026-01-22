@@ -178,7 +178,7 @@
                 <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">
                     {{ $formMode === 'create' ? __('New :resource', ['resource' => $resourceLabel]) : __('Edit :resource', ['resource' => $resourceLabel]) }}
                 </h2>
-                <form class="mt-6 grid gap-4 md:grid-cols-2" wire:submit.prevent="saveRecord">
+                <form class="mt-6 grid gap-4 md:grid-cols-2" wire:submit.prevent="saveRecord" enctype="multipart/form-data">
                     @foreach ($formFields as $field => $config)
                         @php
                             $type = $config['type'] ?? 'text';
@@ -186,6 +186,10 @@
                             $placeholder = $config['placeholder'] ?? '';
                             $options = $config['options'] ?? [];
                             $fullWidth = $config['full_width'] ?? in_array($type, ['textarea']);
+                            $currentValue = $formData[$field] ?? null;
+                            $preview = $config['preview'] ?? null;
+                            $binding = $config['binding'] ?? 'formData.'.$field;
+                            $errorKey = $config['error_key'] ?? $binding;
                         @endphp
                         <div class="space-y-1 {{ $fullWidth ? 'md:col-span-2' : '' }}">
                             <label for="form-{{ $field }}" class="text-sm font-medium text-neutral-700 dark:text-neutral-200">
@@ -195,7 +199,7 @@
                                 @case('textarea')
                                     <textarea
                                         id="form-{{ $field }}"
-                                        wire:model.defer="formData.{{ $field }}"
+                                        wire:model.defer="{{ $binding }}"
                                         class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                         rows="3"
                                         placeholder="{{ $placeholder }}"
@@ -206,7 +210,7 @@
                                     <input
                                         type="number"
                                         id="form-{{ $field }}"
-                                        wire:model.defer="formData.{{ $field }}"
+                                        wire:model.defer="{{ $binding }}"
                                         class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                         placeholder="{{ $placeholder }}"
                                     >
@@ -217,7 +221,7 @@
                                         <input
                                             type="checkbox"
                                             id="form-{{ $field }}"
-                                            wire:model.defer="formData.{{ $field }}"
+                                            wire:model.defer="{{ $binding }}"
                                             class="h-4 w-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                                         >
                                         <span class="text-sm text-neutral-700 dark:text-neutral-200">{{ $placeholder ?: $label }}</span>
@@ -227,7 +231,7 @@
                                 @case('select')
                                     <select
                                         id="form-{{ $field }}"
-                                        wire:model.defer="formData.{{ $field }}"
+                                        wire:model.defer="{{ $binding }}"
                                         class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                     >
                                         <option value="">{{ $placeholder ?: __('Select an option') }}</option>
@@ -237,17 +241,38 @@
                                     </select>
                                     @break
 
+                                @case('file')
+                                    <input
+                                        type="file"
+                                        id="form-{{ $field }}"
+                                        wire:model.live="{{ $binding }}"
+                                        class="w-full rounded-lg border border-dashed border-neutral-300 px-3 py-4 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
+                                    >
+                                    @if ($preview)
+                                        <div class="mt-3 flex items-center gap-3 rounded-lg border border-neutral-200 px-3 py-2 text-xs text-neutral-600 dark:border-neutral-700 dark:text-neutral-300">
+                                            <img src="{{ $preview }}" alt="{{ $label }}" class="h-12 w-12 rounded object-cover" onerror="this.style.display='none';">
+                                            <a href="{{ $preview }}" target="_blank" class="font-semibold text-primary-600 hover:underline">
+                                                {{ __('View current file') }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                    @break
+
                                 @default
                                     <input
                                         type="{{ in_array($type, ['email', 'password']) ? $type : 'text' }}"
                                         id="form-{{ $field }}"
-                                        wire:model.defer="formData.{{ $field }}"
+                                        wire:model.defer="{{ $binding }}"
                                         class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                         placeholder="{{ $placeholder }}"
                                     >
                             @endswitch
 
-                            @error('formData.'.$field)
+                            @if (!empty($config['help']))
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ $config['help'] }}</p>
+                            @endif
+
+                            @error($errorKey)
                                 <p class="text-sm text-rose-600">{{ $message }}</p>
                             @enderror
                         </div>

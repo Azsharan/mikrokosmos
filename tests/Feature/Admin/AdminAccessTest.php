@@ -7,9 +7,12 @@ use App\Models\Event;
 use App\Models\EventType;
 use App\Models\EventRegistration;
 use App\Models\Product;
+use App\Models\Reservation;
 use App\Models\ShopUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 use App\Livewire\Admin\Categories as CategoriesTable;
@@ -19,6 +22,7 @@ use App\Livewire\Admin\EventTypes as EventTypesTable;
 use App\Livewire\Admin\ShopUsers as ShopUsersTable;
 use App\Livewire\Admin\StaffUsers as StaffUsersTable;
 use App\Livewire\Admin\EventRegistrations as EventRegistrationsTable;
+use App\Livewire\Admin\Reservations as ReservationsTable;
 
 class AdminAccessTest extends TestCase
 {
@@ -33,6 +37,7 @@ class AdminAccessTest extends TestCase
         $this->get(route('admin.shop-users.index'))->assertRedirect(route('login'));
         $this->get(route('admin.staff.index'))->assertRedirect(route('login'));
         $this->get(route('admin.event-registrations.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.reservations.index'))->assertRedirect(route('login'));
     }
 
     public function test_authenticated_users_can_view_category_datatable(): void
@@ -64,6 +69,31 @@ class AdminAccessTest extends TestCase
             ->assertSee(number_format(45.5, 2))
             ->assertSee(number_format(20, 2))
             ->assertSee((string) $product->stock);
+    }
+
+    public function test_admins_can_upload_product_images(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $category = Category::factory()->create();
+
+        Livewire::actingAs($user)
+            ->test(ProductsTable::class)
+            ->call('openCreateModal')
+            ->set('formData.name', 'Collector Edition')
+            ->set('formData.price', 99.5)
+            ->set('formData.cost_price', 50)
+            ->set('formData.stock', 3)
+            ->set('formData.category_id', $category->id)
+            ->set('imageUpload', UploadedFile::fake()->image('collector.jpg'))
+            ->call('saveRecord')
+            ->assertHasNoErrors();
+
+        $product = Product::firstWhere('name', 'Collector Edition');
+
+        $this->assertNotNull($product);
+        $this->assertNotNull($product->image_path);
+        Storage::disk('public')->assertExists($product->image_path);
     }
 
     public function test_event_datatable_formats_dates_and_flags(): void
@@ -135,5 +165,36 @@ class AdminAccessTest extends TestCase
             ->assertStatus(200)
             ->assertSee($registration->event->name)
             ->assertSee($registration->shopUser->name);
+    }
+
+    public function test_reservations_datatable_lists_entries(): void
+    {
+        $user = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'name' => 'Tabletop Fan',
+            'status' => 'pending',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(ReservationsTable::class)
+            ->assertStatus(200)
+            ->assertSee($reservation->name)
+            ->assertSee($reservation->product->name);
+    }
+
+    public function test_admins_can_confirm_reservations(): void
+    {
+        $user = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'status' => 'pending',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(ReservationsTable::class)
+            ->call('confirmReservation', $reservation->id)
+            ->assertHasNoErrors()
+            ->assertSee(__('Collected'));
+
+        $this->assertEquals('confirmed', $reservation->fresh()->status);
     }
 }

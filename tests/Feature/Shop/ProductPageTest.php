@@ -22,7 +22,9 @@ class ProductPageTest extends TestCase
             ->assertOk()
             ->assertSee($product->name)
             ->assertSee(number_format(49.99, 2))
-            ->assertSee(__('Detalles del producto'));
+            ->assertSee(__('Detalles del producto'))
+            ->assertSee(__('Reserva en línea'))
+            ->assertSee(__('Enviar y confirmar reserva'));
     }
 
     public function test_inactive_products_return_not_found(): void
@@ -46,5 +48,17 @@ class ProductPageTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSee(route('shop.products.show', $product), false);
+    }
+
+    public function test_product_page_displays_uploaded_image(): void
+    {
+        $product = Product::factory()->create([
+            'is_active' => true,
+            'image_path' => 'product-images/example.jpg',
+        ]);
+
+        $this->get(route('shop.products.show', $product))
+            ->assertOk()
+            ->assertSee(asset('storage/product-images/example.jpg'), false);
     }
 }

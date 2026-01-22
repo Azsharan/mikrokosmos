@@ -53,6 +53,11 @@
                 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($products as $product)
                         <a href="{{ route('shop.products.show', $product) }}" class="group block rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-6 shadow-sm transition hover:-translate-y-1 hover:border-amber-200" wire:navigate>
+                            @if ($product->image_url)
+                                <div class="mb-4 overflow-hidden rounded-2xl bg-zinc-100">
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.03]">
+                                </div>
+                            @endif
                             <div class="space-y-3">
                                 <h3 class="text-2xl font-semibold text-zinc-900 group-hover:text-amber-700">{{ $product->name }}</h3>
                                 @if ($product->description)

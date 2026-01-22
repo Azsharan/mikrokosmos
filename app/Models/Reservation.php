@@ -6,24 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class EventRegistration extends Model
+class Reservation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'event_id',
-        'shop_user_id',
+        'product_id',
+        'name',
+        'email',
+        'phone',
+        'quantity',
         'status',
         'notes',
     ];
 
-    public function event(): BelongsTo
-    {
-        return $this->belongsTo(Event::class);
-    }
+    protected $casts = [
+        'quantity' => 'integer',
+    ];
 
-    public function shopUser(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(ShopUser::class);
+        return $this->belongsTo(Product::class);
     }
 }
