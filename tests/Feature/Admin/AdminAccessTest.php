@@ -1,0 +1,139 @@
+<?php
+
+namespace Tests\Feature\Admin;
+
+use App\Models\Category;
+use App\Models\Event;
+use App\Models\EventType;
+use App\Models\EventRegistration;
+use App\Models\Product;
+use App\Models\ShopUser;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use Tests\TestCase;
+use App\Livewire\Admin\Categories as CategoriesTable;
+use App\Livewire\Admin\Products as ProductsTable;
+use App\Livewire\Admin\Events as EventsTable;
+use App\Livewire\Admin\EventTypes as EventTypesTable;
+use App\Livewire\Admin\ShopUsers as ShopUsersTable;
+use App\Livewire\Admin\StaffUsers as StaffUsersTable;
+use App\Livewire\Admin\EventRegistrations as EventRegistrationsTable;
+
+class AdminAccessTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_guest_users_are_redirected_from_admin_routes(): void
+    {
+        $this->get(route('admin.categories.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.products.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.events.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.event-types.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.shop-users.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.staff.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.event-registrations.index'))->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_users_can_view_category_datatable(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::factory()->create(['name' => 'Strategy Games']);
+
+        Livewire::actingAs($user)
+            ->test(CategoriesTable::class)
+            ->assertStatus(200)
+            ->assertSee($category->name);
+    }
+
+    public function test_product_datatable_renders_key_fields(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create([
+            'name' => 'Premium Dice Set',
+            'price' => 45.5,
+            'cost_price' => 20,
+            'stock' => 15,
+            'is_featured' => true,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(ProductsTable::class)
+            ->assertStatus(200)
+            ->assertSee('Premium Dice Set')
+            ->assertSee(number_format(45.5, 2))
+            ->assertSee(number_format(20, 2))
+            ->assertSee((string) $product->stock);
+    }
+
+    public function test_event_datatable_formats_dates_and_flags(): void
+    {
+        $user = User::factory()->create();
+        $event = Event::factory()->create([
+            'name' => 'Launch Party',
+            'is_online' => true,
+            'is_published' => true,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(EventsTable::class)
+            ->assertStatus(200)
+            ->assertSee('Launch Party')
+            ->assertSee($event->start_at->format('Y-m-d'))
+            ->assertSee(__('Yes'));
+    }
+
+    public function test_event_type_datatable_limits_description(): void
+    {
+        $user = User::factory()->create();
+        $type = EventType::factory()->create([
+            'name' => 'League',
+            'description' => str_repeat('A', 120),
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(EventTypesTable::class)
+            ->assertStatus(200)
+            ->assertSee('League')
+            ->assertSee(substr($type->description, 0, 80));
+    }
+
+    public function test_shop_users_datatable_lists_customers(): void
+    {
+        $user = User::factory()->create();
+        $shopUser = ShopUser::factory()->create(['name' => 'Customer Zero']);
+
+        Livewire::actingAs($user)
+            ->test(ShopUsersTable::class)
+            ->assertStatus(200)
+            ->assertSee('Customer Zero')
+            ->assertSee($shopUser->email);
+    }
+
+    public function test_staff_users_datatable_lists_staff(): void
+    {
+        $user = User::factory()->create();
+        $staff = User::factory()->create([
+            'name' => 'Support Agent',
+            'email' => 'support@example.com',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(StaffUsersTable::class)
+            ->assertStatus(200)
+            ->assertSee('Support Agent')
+            ->assertSee($staff->email);
+    }
+
+    public function test_event_registrations_datatable_lists_entries(): void
+    {
+        $user = User::factory()->create();
+        $registration = EventRegistration::factory()->create();
+
+        Livewire::actingAs($user)
+            ->test(EventRegistrationsTable::class)
+            ->assertStatus(200)
+            ->assertSee($registration->event->name)
+            ->assertSee($registration->shopUser->name);
+    }
+}
