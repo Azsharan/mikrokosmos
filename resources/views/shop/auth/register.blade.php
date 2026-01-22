@@ -100,6 +100,20 @@
                     />
                 </div>
 
+                <div class="md:col-span-2 flex items-start gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
+                    <input
+                        id="newsletter_opt_in"
+                        name="newsletter_opt_in"
+                        type="checkbox"
+                        value="1"
+                        class="mt-1 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+                        {{ old('newsletter_opt_in') ? 'checked' : '' }}
+                    />
+                    <label for="newsletter_opt_in" class="text-sm leading-tight text-zinc-700">
+                        {{ __('Deseo recibir novedades, preventas y promociones por correo.') }}
+                    </label>
+                </div>
+
                 <div class="md:col-span-2">
                     <button
                         type="submit"

@@ -26,6 +26,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
             'phone' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
+            'newsletter_opt_in' => ['nullable', 'boolean'],
         ]);
 
         $shopUser = ShopUser::create([
@@ -35,6 +36,7 @@ class RegisteredUserController extends Controller
             'phone' => $validated['phone'] ?? null,
             'address' => $validated['address'] ?? null,
             'is_active' => true,
+            'newsletter_opt_in' => (bool) ($validated['newsletter_opt_in'] ?? false),
         ]);
 
         Auth::guard('shop')->login($shopUser);

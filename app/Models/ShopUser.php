@@ -19,6 +19,7 @@ class ShopUser extends Authenticatable
         'phone',
         'address',
         'is_active',
+        'newsletter_opt_in',
     ];
 
     protected $hidden = [
@@ -28,6 +29,7 @@ class ShopUser extends Authenticatable
 
     protected $casts = [
         'is_active' => 'boolean',
+        'newsletter_opt_in' => 'boolean',
     ];
 
     public function eventRegistrations(): HasMany

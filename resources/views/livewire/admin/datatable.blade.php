@@ -7,12 +7,46 @@
 @endphp
 
 <div class="space-y-6">
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div
+        x-data="{
+            flashMessage: null,
+            flashType: 'success',
+            flashVisible: false,
+            flashTimer: null,
+            showFlash(message, type) {
+                this.flashMessage = message;
+                this.flashType = type;
+                this.flashVisible = true;
+
+                clearTimeout(this.flashTimer);
+                this.flashTimer = setTimeout(() => {
+                    this.flashVisible = false;
+                }, 5000);
+            }
+        }"
+        x-init="
+            @this.on('flash-message', ({message, type}) => {
+                showFlash(message, type);
+            });
+        "
+        class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+    >
         <div>
             <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">{{ $title }}</h1>
             @if ($description)
                 <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ $description }}</p>
             @endif
+            <template x-if="flashVisible">
+                <div
+                    x-bind:class="{
+                        'mt-3 rounded-lg border px-4 py-2 text-sm': true,
+                        'bg-emerald-50 text-emerald-800 border-emerald-200': flashType === 'success',
+                        'bg-amber-50 text-amber-800 border-amber-200': flashType === 'warning',
+                        'bg-rose-50 text-rose-800 border-rose-200': flashType === 'error',
+                    }"
+                    x-text="flashMessage"
+                ></div>
+            </template>
         </div>
         @if ($hasForm)
             <div class="flex justify-end">
@@ -110,8 +144,11 @@
                         @php
                             $align = $column['align'] ?? 'left';
                         @endphp
+                        @php
+                            $isActionsColumn = ($column['type'] ?? null) === 'actions';
+                        @endphp
                         <th scope="col" class="{{ $column['th_class'] ?? 'px-6 py-3' }} {{ $align === 'right' ? 'text-right' : '' }}">
-                            {{ $column['label'] }}
+                            {{ $isActionsColumn ? __('Actions') : $column['label'] }}
                         </th>
                     @endforeach
                     @if ($datatable->showActionColumn())

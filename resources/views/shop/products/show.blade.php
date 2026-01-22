@@ -1,4 +1,5 @@
 @php($appName = config('app.name', 'Mikrokosmos'))
+@php($shopCustomer = auth('shop')->user())
 
 <x-layouts::shop :title="$product->name">
     <section class="bg-gradient-to-br from-[#150a24] via-[#2d154c] to-[#0f0617] text-white">
@@ -130,50 +131,58 @@
 
                     <form action="{{ route('shop.products.reserve', $product) }}" method="POST" class="space-y-4">
                         @csrf
-                        <div>
-                            <label for="reservation-name" class="text-sm font-medium text-zinc-800">{{ __('Nombre completo') }}</label>
-                            <input
-                                type="text"
-                                id="reservation-name"
-                                name="name"
-                                value="{{ old('name') }}"
-                                class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                required
-                            >
-                            @error('name')
-                                <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        @if (! $shopCustomer)
+                            <div>
+                                <label for="reservation-name" class="text-sm font-medium text-zinc-800">{{ __('Nombre completo') }}</label>
+                                <input
+                                    type="text"
+                                    id="reservation-name"
+                                    name="name"
+                                    value="{{ old('name') }}"
+                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
+                                    required
+                                >
+                                @error('name')
+                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <div>
-                            <label for="reservation-email" class="text-sm font-medium text-zinc-800">{{ __('Correo electrónico') }}</label>
-                            <input
-                                type="email"
-                                id="reservation-email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                required
-                            >
-                            @error('email')
-                                <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                            <div>
+                                <label for="reservation-email" class="text-sm font-medium text-zinc-800">{{ __('Correo electrónico') }}</label>
+                                <input
+                                    type="email"
+                                    id="reservation-email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
+                                    required
+                                >
+                                @error('email')
+                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <div>
-                            <label for="reservation-phone" class="text-sm font-medium text-zinc-800">{{ __('Teléfono (opcional)') }}</label>
-                            <input
-                                type="text"
-                                id="reservation-phone"
-                                name="phone"
-                                value="{{ old('phone') }}"
-                                class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                placeholder="+34 600 000 000"
-                            >
-                            @error('phone')
-                                <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                            <div>
+                                <label for="reservation-phone" class="text-sm font-medium text-zinc-800">{{ __('Teléfono (opcional)') }}</label>
+                                <input
+                                    type="text"
+                                    id="reservation-phone"
+                                    name="phone"
+                                    value="{{ old('phone') }}"
+                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
+                                    placeholder="+34 600 000 000"
+                                >
+                                @error('phone')
+                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @else
+                            <div class="rounded-lg border border-emerald-200 bg-emerald-50/60 px-3 py-2 text-sm text-emerald-900">
+                                <p class="font-semibold">{{ __('Reservarás como :name', ['name' => $shopCustomer->name]) }}</p>
+                                <p class="text-xs text-emerald-700">{{ $shopCustomer->email }} @if($shopCustomer->phone) · {{ $shopCustomer->phone }} @endif</p>
+                                <p class="mt-1 text-xs text-emerald-800">{{ __('Si necesitas modificar tus datos, actualízalos en tu cuenta de la tienda.') }}</p>
+                            </div>
+                        @endif
 
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div>
@@ -207,6 +216,10 @@
                                 <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <p class="rounded-lg bg-amber-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-amber-700">
+                            {{ __('Tu reserva se mantendrá disponible por 5 días laborables. Pasado ese plazo, el producto volverá al inventario.') }}
+                        </p>
 
                         <button
                             type="submit"

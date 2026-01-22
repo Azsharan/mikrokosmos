@@ -42,6 +42,7 @@ Route::prefix('tienda')->name('shop.')->group(function () {
 
     Route::middleware('auth:shop')->group(function () {
         Route::get('cuenta', AccountController::class)->name('account');
+        Route::put('cuenta', [AccountController::class, 'update'])->name('account.update');
         Route::post('salir', [ShopAuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
 });
@@ -80,6 +81,7 @@ Route::middleware(['auth', 'verified'])
         Route::get('categories', CategoriesPage::class)->name('categories.index');
         Route::get('products', ProductsPage::class)->name('products.index');
         Route::get('reservations', ReservationsPage::class)->name('reservations.index');
+        Route::get('newsletters', \App\Livewire\Admin\Newsletters::class)->name('newsletters.index');
         Route::get('events', EventsPage::class)->name('events.index');
         Route::get('event-types', EventTypesPage::class)->name('event-types.index');
         Route::get('shop-users', ShopUsersPage::class)->name('shop-users.index');

@@ -22,6 +22,7 @@ class ShopUserFactory extends Factory
             'phone' => $this->faker->optional()->phoneNumber(),
             'address' => $this->faker->optional()->address(),
             'is_active' => true,
+            'newsletter_opt_in' => $this->faker->boolean(30),
         ];
     }
 }

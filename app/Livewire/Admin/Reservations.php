@@ -2,8 +2,12 @@
 
 namespace App\Livewire\Admin;
 
+use App\Mail\ReservationCancelledMail;
 use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class Reservations extends Datatable
 {
@@ -29,6 +33,12 @@ class Reservations extends Datatable
     protected function columns(): array
     {
         return [
+            [
+                'label' => __('Reservation Code'),
+                'type' => 'text',
+                'field' => 'code',
+                'text_class' => 'font-mono text-sm',
+            ],
             [
                 'label' => __('Product'),
                 'format' => function (Reservation $reservation) {
@@ -100,20 +110,28 @@ class Reservations extends Datatable
                         );
                     }
 
-                    if ($reservation->status === 'cancelled') {
-                        return sprintf(
+                    $buttons = [];
+
+                    if ($reservation->status !== 'cancelled') {
+                        $buttons[] = sprintf(
+                            '<button type="button" wire:click="confirmReservation(%1$d)" wire:loading.attr="disabled" wire:target="confirmReservation" class="inline-flex items-center rounded-lg bg-primary-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-primary-500">%2$s</button>',
+                            $reservation->getKey(),
+                            e(__('Mark as collected'))
+                        );
+
+                        $buttons[] = sprintf(
+                            '<button type="button" wire:click="cancelReservation(%1$d)" wire:loading.attr="disabled" wire:target="cancelReservation" class="inline-flex items-center rounded-lg border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 dark:border-rose-500/40 dark:text-rose-200 dark:hover:bg-rose-500/10">%2$s</button>',
+                            $reservation->getKey(),
+                            e(__('Cancel'))
+                        );
+                    } else {
+                        $buttons[] = sprintf(
                             '<span class="inline-flex items-center rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-500/20 dark:text-rose-100">%s</span>',
                             e(__('Cancelled'))
                         );
                     }
 
-                    return sprintf(
-                        '<button type="button" wire:click="confirmReservation(%1$d)" wire:loading.attr="disabled" wire:target="confirmReservation" class="inline-flex items-center rounded-lg bg-primary-600 px-4 py-2 text-xs font-semibold text-white transition %3$s" %2$s>%4$s</button>',
-                        $reservation->getKey(),
-                        '',
-                        'hover:bg-primary-500',
-                        e(__('Mark as collected'))
-                    );
+                    return implode(' ', $buttons);
                 },
                 'html' => true,
                 'th_class' => 'px-6 py-3 text-right',
@@ -136,6 +154,14 @@ class Reservations extends Datatable
                 'field' => 'status',
                 'placeholder' => __('All statuses'),
             ],
+            'code' => [
+                'type' => 'text',
+                'label' => __('Reservation Code'),
+                'placeholder' => __('Search by code'),
+                'apply' => function (Builder $query, $value) {
+                    $query->where('code', 'like', '%'.$value.'%');
+                },
+            ],
         ];
     }
 
@@ -154,5 +180,42 @@ class Reservations extends Datatable
         $reservation->forceFill(['status' => 'confirmed'])->save();
 
         $this->dispatch('$refresh');
+    }
+
+    public function cancelReservation(int $reservationId): void
+    {
+        $reservation = Reservation::query()->findOrFail($reservationId);
+
+        if ($reservation->status === 'cancelled') {
+            return;
+        }
+
+        $reservation->forceFill(['status' => 'cancelled'])->save();
+
+        if ($this->shouldSendReservationNotification()) {
+            try {
+                Mail::to($reservation->email)->send(new ReservationCancelledMail($reservation));
+            } catch (Throwable $exception) {
+                Log::warning('Failed to send reservation cancellation email', [
+                    'reservation_id' => $reservation->id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
+        }
+
+        $this->dispatch('$refresh');
+    }
+
+    protected function shouldSendReservationNotification(): bool
+    {
+        $defaultMailer = config('mail.default');
+
+        if (! $defaultMailer) {
+            return false;
+        }
+
+        $mailerConfig = config("mail.mailers.{$defaultMailer}");
+
+        return is_array($mailerConfig) && ! empty($mailerConfig);
     }
 }

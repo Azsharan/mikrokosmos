@@ -2,11 +2,15 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Mail\NewsletterBroadcastMail;
+use App\Mail\ReservationCancelledMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Category;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\EventRegistration;
 use App\Models\Product;
+use App\Models\Newsletter;
 use App\Models\Reservation;
 use App\Models\ShopUser;
 use App\Models\User;
@@ -179,7 +183,8 @@ class AdminAccessTest extends TestCase
             ->test(ReservationsTable::class)
             ->assertStatus(200)
             ->assertSee($reservation->name)
-            ->assertSee($reservation->product->name);
+            ->assertSee($reservation->product->name)
+            ->assertSee($reservation->code);
     }
 
     public function test_admins_can_confirm_reservations(): void
@@ -193,8 +198,64 @@ class AdminAccessTest extends TestCase
             ->test(ReservationsTable::class)
             ->call('confirmReservation', $reservation->id)
             ->assertHasNoErrors()
-            ->assertSee(__('Collected'));
+            ->assertSee(__('Collected'))
+            ->assertSee($reservation->code);
 
         $this->assertEquals('confirmed', $reservation->fresh()->status);
+    }
+
+    public function test_admins_can_cancel_reservations(): void
+    {
+        $user = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'status' => 'pending',
+        ]);
+
+        config(['mail.default' => 'array']);
+        Mail::fake();
+
+        Livewire::actingAs($user)
+            ->test(ReservationsTable::class)
+            ->call('cancelReservation', $reservation->id)
+            ->assertHasNoErrors()
+            ->assertSee(__('Cancelled'))
+            ->assertSee($reservation->code);
+
+        $this->assertEquals('cancelled', $reservation->fresh()->status);
+
+        Mail::assertSent(ReservationCancelledMail::class, function ($mail) use ($reservation) {
+            return $mail->reservation->is($reservation);
+        });
+    }
+
+    public function test_newsletter_datatable_lists_entries(): void
+    {
+        $user = User::factory()->create();
+        $newsletter = Newsletter::factory()->create(['title' => 'Boletín Lunar']);
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Admin\Newsletters::class)
+            ->assertStatus(200)
+            ->assertSee('Boletín Lunar');
+    }
+
+    public function test_admins_can_send_newsletter_now(): void
+    {
+        $user = User::factory()->create();
+        $newsletter = Newsletter::factory()->create(['status' => 'draft']);
+        ShopUser::factory()->create([
+            'email' => 'subscriber@example.com',
+            'newsletter_opt_in' => true,
+        ]);
+
+        Mail::fake();
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Admin\Newsletters::class)
+            ->call('sendNow', $newsletter->id)
+            ->assertStatus(200);
+
+        Mail::assertSent(NewsletterBroadcastMail::class);
+        $this->assertEquals('sent', $newsletter->fresh()->status);
     }
 }
