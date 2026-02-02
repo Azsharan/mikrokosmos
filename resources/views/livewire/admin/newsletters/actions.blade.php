@@ -4,7 +4,7 @@
         wire:click="sendNow({{ $newsletter->getKey() }})"
         class="inline-flex items-center rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-700/20"
     >
-        {{ __('Enviar ahora') }}
+        {{ $newsletter->status === 'sent' ? __('Reenviar') : __('Enviar ahora') }}
     </button>
     <button
         type="button"

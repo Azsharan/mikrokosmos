@@ -306,4 +306,23 @@ class AdminAccessTest extends TestCase
         Mail::assertSent(NewsletterBroadcastMail::class);
         $this->assertEquals('sent', $newsletter->fresh()->status);
     }
+
+    public function test_admins_can_resend_newsletter_even_if_sent_before(): void
+    {
+        $user = User::factory()->create();
+        $newsletter = Newsletter::factory()->create(['status' => 'sent']);
+        ShopUser::factory()->create([
+            'email' => 'subscriber@example.com',
+            'newsletter_opt_in' => true,
+        ]);
+
+        Mail::fake();
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Admin\Newsletters::class)
+            ->call('sendNow', $newsletter->id)
+            ->assertStatus(200);
+
+        Mail::assertSent(NewsletterBroadcastMail::class);
+    }
 }

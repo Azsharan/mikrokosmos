@@ -3,14 +3,12 @@
 namespace App\Livewire\Admin;
 
 use App\Livewire\Admin\Datatable;
-use App\Mail\NewsletterBroadcastMail;
 use App\Models\Newsletter;
-use App\Models\ShopUser;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Throwable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use App\Services\NewsletterSender;
 
 class Newsletters extends Datatable
 {
@@ -96,9 +94,10 @@ class Newsletters extends Datatable
                 'full_width' => true,
             ],
             'scheduled_at' => [
-                'type' => 'text',
+                'type' => 'datetime-local',
                 'label' => __('Programar para (opcional)'),
-                'placeholder' => '2026-02-01 10:00:00',
+                'placeholder' => now()->format('Y-m-d\TH:i'),
+                'help' => __('Selecciona fecha y hora para enviar este boletín automáticamente.'),
             ],
         ];
     }
@@ -125,51 +124,17 @@ class Newsletters extends Datatable
     {
         $newsletter = Newsletter::query()->findOrFail($newsletterId);
 
-        if ($newsletter->status === 'sent') {
-            return;
-        }
+        $result = app(NewsletterSender::class)->send($newsletter);
 
-        $recipients = ShopUser::query()->where('newsletter_opt_in', true)->pluck('email');
+        $messages = [
+            'sent' => [__('El boletín se envió correctamente.'), 'success'],
+            'no_recipients' => [__('No hay clientes suscritos para enviar este boletín.'), 'warning'],
+            'missing_mailer' => [__('No se pudo enviar el boletín porque no hay un servicio de correo configurado.'), 'warning'],
+            'error' => [__('Ocurrió un error al enviar el boletín.'), 'error'],
+        ];
 
-        if ($recipients->isEmpty()) {
-            $newsletter->markAsSent();
-            $this->setStatusMessage(__('No hay clientes suscritos para enviar este boletín.'), 'warning');
-            return;
-        }
-
-        if (! $this->mailerConfigured()) {
-            Log::warning('Newsletter mail skipped due to missing configuration');
-            $this->setStatusMessage(__('No se pudo enviar el boletín porque no hay un servicio de correo configurado.'), 'warning');
-            return;
-        }
-
-        try {
-            foreach ($recipients as $email) {
-                Mail::to($email)->send(new NewsletterBroadcastMail($newsletter));
-            }
-
-            $newsletter->markAsSent();
-            $this->setStatusMessage(__('El boletín se envió correctamente.'), 'success');
-        } catch (Throwable $exception) {
-            Log::error('Newsletter sending failed', [
-                'newsletter_id' => $newsletter->id,
-                'error' => $exception->getMessage(),
-            ]);
-            $this->setStatusMessage(__('Ocurrió un error al enviar el boletín.'), 'error');
-        }
-    }
-
-    protected function mailerConfigured(): bool
-    {
-        $defaultMailer = config('mail.default');
-
-        if (! $defaultMailer) {
-            return false;
-        }
-
-        $mailerConfig = config("mail.mailers.{$defaultMailer}");
-
-        return is_array($mailerConfig) && ! empty($mailerConfig);
+        [$message, $type] = $messages[$result['status']] ?? [__('Ocurrió un error al enviar el boletín.'), 'error'];
+        $this->setStatusMessage($message, $type);
     }
 
     protected function setStatusMessage(string $message, string $type = 'success'): void
@@ -185,5 +150,45 @@ class Newsletters extends Datatable
         ]);
 
         $this->dispatch('reset-flash-timer', $this->statusMessageId);
+    }
+
+    protected function createRecord(array $data): Model
+    {
+        return parent::createRecord($this->prepareFormData($data));
+    }
+
+    protected function updateRecord(Model $record, array $data): Model
+    {
+        return parent::updateRecord($record, $this->prepareFormData($data));
+    }
+
+    protected function formDataFromRecord(Model $record): array
+    {
+        $data = parent::formDataFromRecord($record);
+
+        if (! empty($record->scheduled_at)) {
+            $data['scheduled_at'] = $record->scheduled_at->format('Y-m-d\TH:i');
+        }
+
+        return $data;
+    }
+
+    protected function prepareFormData(array $data): array
+    {
+        $scheduledAt = isset($data['scheduled_at']) && $data['scheduled_at']
+            ? Carbon::parse($data['scheduled_at'])
+            : null;
+
+        $data['scheduled_at'] = $scheduledAt;
+
+        if (! isset($data['status']) || $data['status'] !== 'sent') {
+            if ($scheduledAt && $scheduledAt->isFuture()) {
+                $data['status'] = 'scheduled';
+            } else {
+                $data['status'] = 'draft';
+            }
+        }
+
+        return $data;
     }
 }

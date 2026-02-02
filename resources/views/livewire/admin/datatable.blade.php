@@ -58,8 +58,9 @@
                     {{ __('New :resource', ['resource' => $resourceLabel]) }}
                 </button>
             </div>
-        @endif
-    </div>
+@endif
+</div>
+
 
     @if ($hasFilters)
         <div class="space-y-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
@@ -250,6 +251,7 @@
                                         wire:model.defer="{{ $binding }}"
                                         class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                         placeholder="{{ $placeholder }}"
+                                        {!! $extraAttributes ? ' '.$extraAttributes : '' !!}
                                     >
                                     @break
 
@@ -293,6 +295,16 @@
                                             </a>
                                         </div>
                                     @endif
+                                    @break
+
+                                @case('datetime-local')
+                                    <input
+                                        type="datetime-local"
+                                        id="form-{{ $field }}"
+                                        wire:model.defer="{{ $binding }}"
+                                        class="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
+                                        placeholder="{{ $placeholder }}"
+                                    >
                                     @break
 
                                 @default
