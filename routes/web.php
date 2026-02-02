@@ -9,6 +9,7 @@ use App\Http\Controllers\Shop\EventCalendarController;
 use App\Http\Controllers\Shop\EventRegistrationController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProductReservationController;
+use App\Http\Controllers\Shop\TableReservationController;
 use App\Livewire\Admin\Categories as CategoriesPage;
 use App\Livewire\Admin\EventTypes as EventTypesPage;
 use App\Livewire\Admin\Events as EventsPage;
@@ -43,6 +44,9 @@ Route::prefix('tienda')->name('shop.')->group(function () {
     Route::middleware('auth:shop')->group(function () {
         Route::get('cuenta', AccountController::class)->name('account');
         Route::put('cuenta', [AccountController::class, 'update'])->name('account.update');
+        Route::get('mesas', [TableReservationController::class, 'index'])->name('tables.index');
+        Route::post('mesas', [TableReservationController::class, 'store'])->name('tables.store');
+        Route::delete('mesas/{tableReservation}', [TableReservationController::class, 'destroy'])->name('tables.destroy');
         Route::post('salir', [ShopAuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
 });
@@ -81,6 +85,7 @@ Route::middleware(['auth', 'verified'])
         Route::get('categories', CategoriesPage::class)->name('categories.index');
         Route::get('products', ProductsPage::class)->name('products.index');
         Route::get('reservations', ReservationsPage::class)->name('reservations.index');
+        Route::get('table-reservations', \App\Livewire\Admin\TableReservations::class)->name('table-reservations.index');
         Route::get('newsletters', \App\Livewire\Admin\Newsletters::class)->name('newsletters.index');
         Route::get('events', EventsPage::class)->name('events.index');
         Route::get('event-types', EventTypesPage::class)->name('event-types.index');

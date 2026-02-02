@@ -14,6 +14,7 @@ use App\Models\Newsletter;
 use App\Models\Reservation;
 use App\Models\ShopUser;
 use App\Models\User;
+use App\Models\TableReservation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +28,7 @@ use App\Livewire\Admin\ShopUsers as ShopUsersTable;
 use App\Livewire\Admin\StaffUsers as StaffUsersTable;
 use App\Livewire\Admin\EventRegistrations as EventRegistrationsTable;
 use App\Livewire\Admin\Reservations as ReservationsTable;
+use App\Livewire\Admin\TableReservations as TableReservationsTable;
 
 class AdminAccessTest extends TestCase
 {
@@ -42,6 +44,7 @@ class AdminAccessTest extends TestCase
         $this->get(route('admin.staff.index'))->assertRedirect(route('login'));
         $this->get(route('admin.event-registrations.index'))->assertRedirect(route('login'));
         $this->get(route('admin.reservations.index'))->assertRedirect(route('login'));
+        $this->get(route('admin.table-reservations.index'))->assertRedirect(route('login'));
     }
 
     public function test_authenticated_users_can_view_category_datatable(): void
@@ -185,6 +188,51 @@ class AdminAccessTest extends TestCase
             ->assertSee($reservation->name)
             ->assertSee($reservation->product->name)
             ->assertSee($reservation->code);
+    }
+
+    public function test_table_reservations_datatable_lists_entries(): void
+    {
+        $user = User::factory()->create();
+        $reservation = TableReservation::factory()->create([
+            'table_number' => 3,
+            'party_size' => 5,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(TableReservationsTable::class)
+            ->assertStatus(200)
+            ->assertSee((string) $reservation->table_number)
+            ->assertSee((string) $reservation->party_size);
+    }
+
+    public function test_admins_can_confirm_table_reservations(): void
+    {
+        $user = User::factory()->create();
+        $reservation = TableReservation::factory()->create([
+            'status' => TableReservation::STATUS_PENDING,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(TableReservationsTable::class)
+            ->call('confirmReservation', $reservation->id)
+            ->assertHasNoErrors();
+
+        $this->assertEquals(TableReservation::STATUS_CONFIRMED, $reservation->fresh()->status);
+    }
+
+    public function test_admins_can_cancel_table_reservations(): void
+    {
+        $user = User::factory()->create();
+        $reservation = TableReservation::factory()->create([
+            'status' => TableReservation::STATUS_PENDING,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(TableReservationsTable::class)
+            ->call('cancelReservation', $reservation->id)
+            ->assertHasNoErrors();
+
+        $this->assertEquals(TableReservation::STATUS_CANCELLED, $reservation->fresh()->status);
     }
 
     public function test_admins_can_confirm_reservations(): void

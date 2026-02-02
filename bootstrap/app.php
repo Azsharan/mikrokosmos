@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 | Request::HEADER_X_FORWARDED_PROTO
                 | Request::HEADER_X_FORWARDED_PORT
         );
+
+        $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

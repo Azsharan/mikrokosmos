@@ -36,4 +36,9 @@ class ShopUser extends Authenticatable
     {
         return $this->hasMany(EventRegistration::class);
     }
+
+    public function tableReservations(): HasMany
+    {
+        return $this->hasMany(TableReservation::class);
+    }
 }

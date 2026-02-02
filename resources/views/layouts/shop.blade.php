@@ -35,6 +35,9 @@
                             <a href="{{ route('shop.account') }}" class="rounded-full border border-[#c6b3ff] px-4 py-2 font-semibold text-[#4b2d7f] transition hover:bg-[#f1eaff]">
                                 {{ __('Mi cuenta') }}
                             </a>
+                            <a href="{{ route('shop.tables.index') }}" class="rounded-full border border-[#7ab44c] px-4 py-2 font-semibold text-[#2f5d11] transition hover:bg-[#f0ffe0]">
+                                {{ __('Reservar mesa') }}
+                            </a>
                             <form method="POST" action="{{ route('shop.logout') }}" class="flex">
                                 @csrf
                                 <button type="submit" class="rounded-full border border-[#e6c45c] bg-[#ffe9a6] px-4 py-2 font-semibold text-[#4a3400] transition hover:bg-[#ffd96e]">
