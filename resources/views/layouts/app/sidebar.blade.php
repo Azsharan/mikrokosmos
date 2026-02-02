@@ -30,6 +30,9 @@
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="queue-list" :href="route('admin.table-reservations.index')" :current="request()->routeIs('admin.table-reservations.*')" wire:navigate>
                         {{ __('Table Reservations') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="link" :href="route('admin.site-settings.index')" :current="request()->routeIs('admin.site-settings.*')" wire:navigate>
+                        {{ __('Site Settings') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="envelope" :href="route('admin.newsletters.index')" :current="request()->routeIs('admin.newsletters.*')" wire:navigate>
                         {{ __('Newsletters') }}
                     </flux:sidebar.item>

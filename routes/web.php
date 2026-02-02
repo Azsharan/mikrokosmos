@@ -86,6 +86,7 @@ Route::middleware(['auth', 'verified'])
         Route::get('products', ProductsPage::class)->name('products.index');
         Route::get('reservations', ReservationsPage::class)->name('reservations.index');
         Route::get('table-reservations', \App\Livewire\Admin\TableReservations::class)->name('table-reservations.index');
+        Route::get('site-settings', \App\Livewire\Admin\SiteSettings::class)->name('site-settings.index');
         Route::get('newsletters', \App\Livewire\Admin\Newsletters::class)->name('newsletters.index');
         Route::get('events', EventsPage::class)->name('events.index');
         Route::get('event-types', EventTypesPage::class)->name('event-types.index');
