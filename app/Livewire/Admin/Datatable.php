@@ -20,6 +20,7 @@ abstract class Datatable extends Component
     protected int $perPage = 10;
     protected bool $showActionButtons = true;
     protected ?string $recordName = null;
+    protected int $mobilePerPage = 5;
 
     public bool $showFormModal = false;
     public bool $showDeleteModal = false;
@@ -69,7 +70,7 @@ abstract class Datatable extends Component
     {
         $query = $this->applyFiltersToQuery($this->query());
 
-        return $query->paginate($this->perPage);
+        return $query->paginate($this->getPerPage());
     }
 
     public function hasForm(): bool
@@ -91,6 +92,22 @@ abstract class Datatable extends Component
         $model = $this->query()->getModel();
 
         return Str::headline(class_basename($model));
+    }
+
+    protected function getPerPage(): int
+    {
+        return $this->isMobileRequest() ? $this->mobilePerPage : $this->perPage;
+    }
+
+    protected function isMobileRequest(): bool
+    {
+        $agent = request()->userAgent();
+
+        if (! $agent) {
+            return false;
+        }
+
+        return (bool) preg_match('/Mobile|Android|iP(ad|hone)|IEMobile|Kindle|Silk/i', $agent);
     }
 
     public function openCreateModal(): void

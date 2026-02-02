@@ -178,7 +178,7 @@
                                 $visibilityClass = $priorityVisibilityMap[$priority] ?? ($priority > 1 ? 'hidden 2xl:table-cell' : '');
                                 $tdClasses = trim($tdClass.' '.($align === 'right' ? 'text-right' : '').' '.$visibilityClass);
                             @endphp
-                            <td class="{{ $tdClasses }}">
+                            <td class="{{ $tdClasses }} align-top">
                                 @if ($cell['html'])
                                     {!! $cell['value'] !!}
                                 @else
@@ -187,7 +187,7 @@
                             </td>
                         @endforeach
                         @if ($datatable->showActionColumn())
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 align-bottom">
                                 <div class="flex justify-end gap-2">
                                     <button
                                         type="button"
@@ -221,25 +221,6 @@
     <div class="space-y-4 md:hidden">
         @forelse ($items as $item)
             <div class="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
-                @if ($datatable->showActionColumn())
-                    <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                        <button
-                            type="button"
-                            wire:click="openEditModal({{ $item->getKey() }})"
-                            class="inline-flex w-full items-center justify-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800 sm:w-auto"
-                        >
-                            {{ __('Edit') }}
-                        </button>
-                        <button
-                            type="button"
-                            wire:click="confirmDelete({{ $item->getKey() }})"
-                            class="inline-flex w-full items-center justify-center rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-200 dark:hover:bg-rose-500/10 sm:w-auto"
-                        >
-                            {{ __('Delete') }}
-                        </button>
-                    </div>
-                @endif
-
                 <dl class="mt-4 space-y-3">
                     @foreach ($columns as $column)
                         @php
@@ -258,6 +239,27 @@
                         </div>
                     @endforeach
                 </dl>
+
+                @if ($datatable->showActionColumn())
+                    <div class="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-700">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                            <button
+                                type="button"
+                                wire:click="openEditModal({{ $item->getKey() }})"
+                                class="inline-flex w-full items-center justify-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800 sm:w-auto"
+                            >
+                                {{ __('Edit') }}
+                            </button>
+                            <button
+                                type="button"
+                                wire:click="confirmDelete({{ $item->getKey() }})"
+                                class="inline-flex w-full items-center justify-center rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-200 dark:hover:bg-rose-500/10 sm:w-auto"
+                            >
+                                {{ __('Delete') }}
+                            </button>
+                        </div>
+                    </div>
+                @endif
             </div>
         @empty
             <div class="rounded-xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500 shadow-sm dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400">
