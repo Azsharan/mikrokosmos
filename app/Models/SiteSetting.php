@@ -12,9 +12,12 @@ class SiteSetting extends Model
     protected $fillable = [
         'instagram_url',
         'instagram_enabled',
+        'tiktok_url',
+        'tiktok_enabled',
     ];
 
     protected $casts = [
         'instagram_enabled' => 'boolean',
+        'tiktok_enabled' => 'boolean',
     ];
 }

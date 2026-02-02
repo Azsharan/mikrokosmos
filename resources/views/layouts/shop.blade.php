@@ -34,6 +34,9 @@
     $instagramLink = ($siteSettings && $siteSettings->instagram_enabled)
         ? ($siteSettings->instagram_url ?: $defaultInstagram)
         : null;
+    $tiktokLink = ($siteSettings && $siteSettings->tiktok_enabled)
+        ? ($siteSettings->tiktok_url ?: 'https://www.tiktok.com/@mikrokosmos_ourense')
+        : null;
 @endphp
 
 <!DOCTYPE html>
@@ -94,14 +97,22 @@
                             </a>
                         @endforeach
                     </div>
-                    @if ($instagramLink)
-                        <div class="flex items-center gap-2 text-sm text-[#4b2d7f]">
-                            <a href="{{ $instagramLink }}" class="flex items-center gap-2 rounded-full border border-[#c6b3ff] px-3 py-2 transition hover:bg-[#f1eaff]" target="_blank" rel="noopener">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current text-[#c13584]" aria-hidden="true">
-                                    <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.71 4.71 0 0 0 12 7.3Zm0 7.8A3.1 3.1 0 1 1 15.1 12 3.11 3.11 0 0 1 12 15.1Zm6-8.44a1.11 1.11 0 1 1-1.11-1.11 1.11 1.11 0 0 1 1.11 1.11ZM21.8 7a6.43 6.43 0 0 0-1.7-3.6A6.43 6.43 0 0 0 16.5 1.7c-1.43-.09-1.87-.12-4.5-.12s-3.07 0-4.5.12A6.43 6.43 0 0 0 3.9 3.4 6.43 6.43 0 0 0 2.2 7c-.09 1.43-.12 1.87-.12 4.5s0 3.07.12 4.5a6.43 6.43 0 0 0 1.7 3.6 6.43 6.43 0 0 0 3.6 1.7c1.43.09 1.87.12 4.5.12s3.07 0 4.5-.12a6.43 6.43 0 0 0 3.6-1.7 6.43 6.43 0 0 0 1.7-3.6c.09-1.43.12-1.87.12-4.5s0-3.07-.12-4.5ZM20 15.7a4.88 4.88 0 0 1-1.2 2.9 4.88 4.88 0 0 1-2.9 1.2c-1.14.05-1.48.07-4.1.07s-3 0-4.1-.07A4.88 4.88 0 0 1 4.8 18.6 4.88 4.88 0 0 1 3.6 15.7c-.05-1.14-.07-1.48-.07-4.1s0-3 .07-4.1a4.88 4.88 0 0 1 1.2-2.9 4.88 4.88 0 0 1 2.9-1.2c1.14-.05 1.48-.07 4.1-.07s3 0 4.1.07a4.88 4.88 0 0 1 2.9 1.2 4.88 4.88 0 0 1 1.2 2.9c.05 1.14.07 1.48.07 4.1s0 3-.07 4.1Z" />
-                                </svg>
-                                <span>{{ __('Síguenos en Instagram') }}</span>
-                            </a>
+                    @if ($instagramLink || $tiktokLink)
+                        <div class="flex items-center text-sm gap-2 text-[#4b2d7f]">
+                            @if ($instagramLink)
+                                <a href="{{ $instagramLink }}" class="flex items-center rounded-full border border-[#c6b3ff] px-2 py-2 transition hover:bg-[#f1eaff]" target="_blank" rel="noopener">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current text-[#c13584]" aria-hidden="true">
+                                        <path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.71 4.71 0 0 0 12 7.3Zm0 7.8A3.1 3.1 0 1 1 15.1 12 3.11 3.11 0 0 1 12 15.1Zm6-8.44a1.11 1.11 0 1 1-1.11-1.11 1.11 1.11 0 0 1 1.11 1.11ZM21.8 7a6.43 6.43 0 0 0-1.7-3.6A6.43 6.43 0 0 0 16.5 1.7c-1.43-.09-1.87-.12-4.5-.12s-3.07 0-4.5.12A6.43 6.43 0 0 0 3.9 3.4 6.43 6.43 0 0 0 2.2 7c-.09 1.43-.12 1.87-.12 4.5s0 3.07.12 4.5a6.43 6.43 0 0 0 1.7 3.6 6.43 6.43 0 0 0 3.6 1.7c1.43.09 1.87.12 4.5.12s3.07 0 4.5-.12a6.43 6.43 0 0 0 3.6-1.7 6.43 6.43 0 0 0 1.7-3.6c.09-1.43.12-1.87.12-4.5s0-3.07-.12-4.5ZM20 15.7a4.88 4.88 0 0 1-1.2 2.9 4.88 4.88 0 0 1-2.9 1.2c-1.14.05-1.48.07-4.1.07s-3 0-4.1-.07A4.88 4.88 0 0 1 4.8 18.6 4.88 4.88 0 0 1 3.6 15.7c-.05-1.14-.07-1.48-.07-4.1s0-3 .07-4.1a4.88 4.88 0 0 1 1.2-2.9 4.88 4.88 0 0 1 2.9-1.2c1.14-.05 1.48-.07 4.1-.07s3 0 4.1.07a4.88 4.88 0 0 1 2.9 1.2 4.88 4.88 0 0 1 1.2 2.9c.05 1.14.07 1.48.07 4.1s0 3-.07 4.1Z" />
+                                    </svg>
+                                </a>
+                            @endif
+                            @if ($tiktokLink)
+                                <a href="{{ $tiktokLink }}" class="flex items-center rounded-full border border-[#c6b3ff] px-2 py-2 transition hover:bg-[#f1eaff]" target="_blank" rel="noopener">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current text-[#c13584]" aria-hidden="true">
+                                        <path d="M21 7.4c-1.9 0-3.8-.6-5.3-1.8v7.9c0 3.9-3.2 7.1-7.1 7.1S1.5 17.4 1.5 13.5s3.2-7.1 7.1-7.1c.4 0 .9 0 1.3.1v3.3c-.4-.1-.8-.2-1.3-.2-2.1 0-3.9 1.7-3.9 3.9s1.7 3.9 3.9 3.9 3.9-1.7 3.9-3.9V1.5h3.2c.2 1.9 1.3 3.6 3 4.6 1 .6 2.2.9 3.4.9v3.4z"/>
+                                    </svg>
+                                </a>
+                            @endif
                         </div>
                     @endif
                 </div>

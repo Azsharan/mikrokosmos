@@ -43,6 +43,21 @@ class SiteSettings extends Datatable
                     false => ['label' => __('Disabled'), 'class' => 'bg-rose-100 text-rose-700'],
                 ],
             ],
+            [
+                'label' => __('TikTok URL'),
+                'field' => 'tiktok_url',
+                'type' => 'text',
+                'default' => __('No configurado'),
+            ],
+            [
+                'label' => __('TikTok enabled'),
+                'type' => 'badge',
+                'field' => 'tiktok_enabled',
+                'options' => [
+                    true => ['label' => __('Enabled'), 'class' => 'bg-emerald-100 text-emerald-700'],
+                    false => ['label' => __('Disabled'), 'class' => 'bg-rose-100 text-rose-700'],
+                ],
+            ],
         ];
     }
 
@@ -59,6 +74,16 @@ class SiteSettings extends Datatable
                 'label' => __('Show Instagram link'),
                 'default' => true,
             ],
+            'tiktok_url' => [
+                'type' => 'text',
+                'label' => __('TikTok URL'),
+                'placeholder' => 'https://www.tiktok.com/@your-account',
+            ],
+            'tiktok_enabled' => [
+                'type' => 'checkbox',
+                'label' => __('Show TikTok link'),
+                'default' => true,
+            ],
         ];
     }
 
@@ -67,6 +92,8 @@ class SiteSettings extends Datatable
         return [
             'formData.instagram_url' => ['nullable', 'url', 'max:255'],
             'formData.instagram_enabled' => ['boolean'],
+            'formData.tiktok_url' => ['nullable', 'url', 'max:255'],
+            'formData.tiktok_enabled' => ['boolean'],
         ];
     }
 
@@ -75,6 +102,8 @@ class SiteSettings extends Datatable
         return [
             'formData.instagram_url' => __('Instagram URL'),
             'formData.instagram_enabled' => __('Instagram enabled'),
+            'formData.tiktok_url' => __('TikTok URL'),
+            'formData.tiktok_enabled' => __('TikTok enabled'),
         ];
     }
 
