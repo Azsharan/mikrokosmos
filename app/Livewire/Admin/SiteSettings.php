@@ -33,6 +33,7 @@ class SiteSettings extends Datatable
                 'field' => 'instagram_url',
                 'type' => 'text',
                 'default' => __('No configurado'),
+                'priority' => 3,
             ],
             [
                 'label' => __('Instagram enabled'),
@@ -42,12 +43,14 @@ class SiteSettings extends Datatable
                     true => ['label' => __('Enabled'), 'class' => 'bg-emerald-100 text-emerald-700'],
                     false => ['label' => __('Disabled'), 'class' => 'bg-rose-100 text-rose-700'],
                 ],
+                'priority' => 1,
             ],
             [
                 'label' => __('TikTok URL'),
                 'field' => 'tiktok_url',
                 'type' => 'text',
                 'default' => __('No configurado'),
+                'priority' => 3,
             ],
             [
                 'label' => __('TikTok enabled'),
@@ -57,6 +60,7 @@ class SiteSettings extends Datatable
                     true => ['label' => __('Enabled'), 'class' => 'bg-emerald-100 text-emerald-700'],
                     false => ['label' => __('Disabled'), 'class' => 'bg-rose-100 text-rose-700'],
                 ],
+                'priority' => 1,
             ],
         ];
     }

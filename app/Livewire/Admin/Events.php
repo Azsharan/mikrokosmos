@@ -52,6 +52,7 @@ class Events extends Datatable
         return [
             [
                 'label' => __('Event'),
+                'priority' => 1,
                 'format' => fn (Event $event) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -64,6 +65,7 @@ class Events extends Datatable
             ],
             [
                 'label' => __('Type'),
+                'priority' => 4,
                 'format' => function (Event $event) {
                     $type = e(Str::headline($event->type));
                     $extra = $event->eventType ? sprintf('<p class="text-xs text-neutral-500">%s</p>', e($event->eventType->name)) : '';
@@ -77,12 +79,14 @@ class Events extends Datatable
                 'type' => 'text',
                 'field' => 'category.name',
                 'default' => __('None'),
+                'priority' => 4,
             ],
             [
                 'label' => __('Start'),
                 'type' => 'datetime',
                 'field' => 'start_at',
                 'format_string' => 'Y-m-d H:i',
+                'priority' => 1,
             ],
             [
                 'label' => __('End'),
@@ -90,17 +94,20 @@ class Events extends Datatable
                 'field' => 'end_at',
                 'format_string' => 'Y-m-d H:i',
                 'default' => __('Not specified'),
+                'priority' => 2,
             ],
             [
                 'label' => __('Location'),
                 'type' => 'text',
                 'field' => 'location',
                 'default' => __('Not specified'),
+                'priority' => 3,
             ],
             [
                 'label' => __('Online'),
                 'type' => 'badge',
                 'field' => 'is_online',
+                'priority' => 4,
                 'options' => [
                     true => [
                         'label' => __('Yes'),
@@ -116,6 +123,7 @@ class Events extends Datatable
                 'label' => __('Published'),
                 'type' => 'badge',
                 'field' => 'is_published',
+                'priority' => 1,
                 'options' => [
                     true => [
                         'label' => __('Published'),

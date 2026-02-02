@@ -4,6 +4,12 @@
     $resourceLabel = $datatable->resourceLabel();
     $filterDefinitions = $filterDefinitions ?? [];
     $hasFilters = !empty($filterDefinitions);
+    $priorityVisibilityMap = [
+        1 => '',
+        2 => 'hidden lg:table-cell',
+        3 => 'hidden xl:table-cell',
+        4 => 'hidden 2xl:table-cell',
+    ];
 @endphp
 
 <div class="space-y-6">
@@ -49,17 +55,17 @@
             </template>
         </div>
         @if ($hasForm)
-            <div class="flex justify-end">
+            <div class="w-full md:w-auto">
                 <button
                     type="button"
                     wire:click="openCreateModal"
-                    class="inline-flex items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                    class="inline-flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 md:w-auto"
                 >
                     {{ __('New :resource', ['resource' => $resourceLabel]) }}
                 </button>
             </div>
-@endif
-</div>
+        @endif
+    </div>
 
 
     @if ($hasFilters)
@@ -137,18 +143,21 @@
         </div>
     @endif
 
-    <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <div class="hidden overflow-x-auto rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 md:block">
         <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
             <thead class="bg-neutral-50 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
                 <tr>
                     @foreach ($columns as $column)
                         @php
                             $align = $column['align'] ?? 'left';
+                            $priority = $column['priority'] ?? 1;
+                            $visibilityClass = $priorityVisibilityMap[$priority] ?? ($priority > 1 ? 'hidden 2xl:table-cell' : '');
+                            $thClasses = trim(($column['th_class'] ?? 'px-6 py-3').' '.($align === 'right' ? 'text-right' : '').' '.$visibilityClass);
                         @endphp
                         @php
                             $isActionsColumn = ($column['type'] ?? null) === 'actions';
                         @endphp
-                        <th scope="col" class="{{ $column['th_class'] ?? 'px-6 py-3' }} {{ $align === 'right' ? 'text-right' : '' }}">
+                        <th scope="col" class="{{ $thClasses }}">
                             {{ $isActionsColumn ? __('Actions') : $column['label'] }}
                         </th>
                     @endforeach
@@ -165,8 +174,11 @@
                                 $align = $column['align'] ?? 'left';
                                 $tdClass = $column['td_class'] ?? 'px-6 py-4';
                                 $cell = $datatable->renderCell($item, $column);
+                                $priority = $column['priority'] ?? 1;
+                                $visibilityClass = $priorityVisibilityMap[$priority] ?? ($priority > 1 ? 'hidden 2xl:table-cell' : '');
+                                $tdClasses = trim($tdClass.' '.($align === 'right' ? 'text-right' : '').' '.$visibilityClass);
                             @endphp
-                            <td class="{{ $tdClass }} {{ $align === 'right' ? 'text-right' : '' }}">
+                            <td class="{{ $tdClasses }}">
                                 @if ($cell['html'])
                                     {!! $cell['value'] !!}
                                 @else
@@ -206,6 +218,54 @@
         </table>
     </div>
 
+    <div class="space-y-4 md:hidden">
+        @forelse ($items as $item)
+            <div class="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+                @if ($datatable->showActionColumn())
+                    <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                        <button
+                            type="button"
+                            wire:click="openEditModal({{ $item->getKey() }})"
+                            class="inline-flex w-full items-center justify-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800 sm:w-auto"
+                        >
+                            {{ __('Edit') }}
+                        </button>
+                        <button
+                            type="button"
+                            wire:click="confirmDelete({{ $item->getKey() }})"
+                            class="inline-flex w-full items-center justify-center rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-200 dark:hover:bg-rose-500/10 sm:w-auto"
+                        >
+                            {{ __('Delete') }}
+                        </button>
+                    </div>
+                @endif
+
+                <dl class="mt-4 space-y-3">
+                    @foreach ($columns as $column)
+                        @php
+                            $cell = $datatable->renderCell($item, $column);
+                            $label = $column['label'] ?? __('Column');
+                        @endphp
+                        <div class="flex flex-col gap-1 rounded-lg border border-neutral-100 px-3 py-2 dark:border-neutral-800">
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">{{ $label }}</dt>
+                            <dd class="text-sm text-neutral-900 dark:text-white">
+                                @if ($cell['html'])
+                                    {!! $cell['value'] !!}
+                                @else
+                                    {{ $cell['value'] }}
+                                @endif
+                            </dd>
+                        </div>
+                    @endforeach
+                </dl>
+            </div>
+        @empty
+            <div class="rounded-xl border border-neutral-200 bg-white p-6 text-center text-sm text-neutral-500 shadow-sm dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400">
+                {{ $emptyMessage }}
+            </div>
+        @endforelse
+    </div>
+
     <div>
         {{ $items->links() }}
     </div>
@@ -228,6 +288,7 @@
                             $preview = $config['preview'] ?? null;
                             $binding = $config['binding'] ?? 'formData.'.$field;
                             $errorKey = $config['error_key'] ?? $binding;
+                            $extraAttributes = $config['extra_attributes'] ?? '';
                         @endphp
                         <div class="space-y-1 {{ $fullWidth ? 'md:col-span-2' : '' }}">
                             <label for="form-{{ $field }}" class="text-sm font-medium text-neutral-700 dark:text-neutral-200">

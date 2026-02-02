@@ -49,6 +49,7 @@ class Products extends Datatable
         return [
             [
                 'label' => __('Product'),
+                'priority' => 1,
                 'format' => function (Product $product) {
                     return sprintf(
                         '<div>
@@ -66,6 +67,7 @@ class Products extends Datatable
                 'type' => 'text',
                 'field' => 'category.name',
                 'default' => __('None'),
+                'priority' => 2,
             ],
             [
                 'label' => __('Price'),
@@ -73,6 +75,7 @@ class Products extends Datatable
                 'field' => 'price',
                 'align' => 'right',
                 'decimals' => 2,
+                'priority' => 1,
             ],
             [
                 'label' => __('Cost'),
@@ -81,12 +84,14 @@ class Products extends Datatable
                 'default' => __('Not specified'),
                 'decimals' => 2,
                 'align' => 'right',
+                'priority' => 3,
             ],
             [
                 'label' => __('Stock'),
                 'type' => 'integer',
                 'field' => 'stock',
                 'align' => 'right',
+                'priority' => 2,
             ],
             [
                 'label' => __('Featured'),
@@ -94,11 +99,13 @@ class Products extends Datatable
                 'field' => 'is_featured',
                 'checked_label' => __('Yes'),
                 'unchecked_label' => __('No'),
+                'priority' => 3,
             ],
             [
                 'label' => __('Status'),
                 'type' => 'badge',
                 'field' => 'is_active',
+                'priority' => 1,
                 'options' => [
                     true => [
                         'label' => __('Active'),

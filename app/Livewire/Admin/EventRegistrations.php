@@ -57,6 +57,7 @@ class EventRegistrations extends Datatable
         return [
             [
                 'label' => __('Event'),
+                'priority' => 1,
                 'format' => fn (EventRegistrationModel $registration) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -69,6 +70,7 @@ class EventRegistrations extends Datatable
             ],
             [
                 'label' => __('Attendee'),
+                'priority' => 1,
                 'format' => fn (EventRegistrationModel $registration) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -83,6 +85,7 @@ class EventRegistrations extends Datatable
                 'label' => __('Status'),
                 'type' => 'badge',
                 'field' => 'status',
+                'priority' => 1,
                 'options' => [
                     'confirmed' => [
                         'label' => __('Confirmed'),
@@ -104,6 +107,7 @@ class EventRegistrations extends Datatable
                 'type' => 'datetime',
                 'field' => 'created_at',
                 'format_string' => 'Y-m-d H:i',
+                'priority' => 2,
             ],
         ];
     }

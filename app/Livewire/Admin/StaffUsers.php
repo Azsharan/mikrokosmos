@@ -32,6 +32,7 @@ class StaffUsers extends Datatable
         return [
             [
                 'label' => __('Staff Member'),
+                'priority' => 1,
                 'format' => fn (User $user) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -48,6 +49,7 @@ class StaffUsers extends Datatable
                 'field' => 'email_verified_at',
                 'checked_label' => __('Verified'),
                 'unchecked_label' => __('Pending'),
+                'priority' => 1,
             ],
             [
                 'label' => __('Two Factor'),
@@ -55,6 +57,7 @@ class StaffUsers extends Datatable
                 'field' => 'two_factor_confirmed_at',
                 'checked_label' => __('Enabled'),
                 'unchecked_label' => __('Disabled'),
+                'priority' => 2,
             ],
             [
                 'label' => __('Created'),
@@ -62,6 +65,7 @@ class StaffUsers extends Datatable
                 'field' => 'created_at',
                 'format_string' => 'Y-m-d H:i',
                 'align' => 'right',
+                'priority' => 3,
             ],
         ];
     }

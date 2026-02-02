@@ -43,6 +43,7 @@ class EventTypes extends Datatable
         return [
             [
                 'label' => __('Name'),
+                'priority' => 1,
                 'format' => fn (EventType $eventType) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -58,12 +59,14 @@ class EventTypes extends Datatable
                 'type' => 'text',
                 'field' => 'category.name',
                 'default' => __('None'),
+                'priority' => 1,
             ],
             [
                 'label' => __('Events'),
                 'type' => 'integer',
                 'field' => 'events_count',
                 'align' => 'right',
+                'priority' => 2,
             ],
             [
                 'label' => __('Description'),
@@ -71,6 +74,7 @@ class EventTypes extends Datatable
                 'field' => 'description',
                 'default' => __('Not specified'),
                 'limit' => 80,
+                'priority' => 3,
             ],
         ];
     }

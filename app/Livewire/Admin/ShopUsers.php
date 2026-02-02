@@ -32,6 +32,7 @@ class ShopUsers extends Datatable
         return [
             [
                 'label' => __('Customer'),
+                'priority' => 1,
                 'format' => fn (ShopUser $shopUser) => sprintf(
                     '<div>
                         <p class="font-semibold text-neutral-900 dark:text-neutral-50">%s</p>
@@ -46,12 +47,14 @@ class ShopUsers extends Datatable
                 'label' => __('Email'),
                 'type' => 'text',
                 'field' => 'email',
+                'priority' => 1,
             ],
             [
                 'label' => __('Phone'),
                 'type' => 'text',
                 'field' => 'phone',
                 'default' => __('Not specified'),
+                'priority' => 2,
             ],
             [
                 'label' => __('Status'),
@@ -59,6 +62,7 @@ class ShopUsers extends Datatable
                 'field' => 'is_active',
                 'checked_label' => __('Active'),
                 'unchecked_label' => __('Inactive'),
+                'priority' => 1,
             ],
             [
                 'label' => __('Created'),
@@ -66,6 +70,7 @@ class ShopUsers extends Datatable
                 'field' => 'created_at',
                 'format_string' => 'Y-m-d H:i',
                 'align' => 'right',
+                'priority' => 3,
             ],
         ];
     }

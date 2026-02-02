@@ -35,12 +35,14 @@ class TableReservations extends Datatable
                 'type' => 'text',
                 'field' => 'code',
                 'text_class' => 'font-mono text-sm',
+                'priority' => 1,
             ],
             [
                 'label' => __('Mesa'),
                 'format' => fn (TableReservation $reservation) => __('Mesa :number', [
                     'number' => $reservation->table_number,
                 ]),
+                'priority' => 2,
             ],
             [
                 'label' => __('Cliente'),
@@ -52,12 +54,14 @@ class TableReservations extends Datatable
                     );
                 },
                 'html' => true,
+                'priority' => 1,
             ],
             [
                 'label' => __('Jugadores'),
                 'type' => 'integer',
                 'field' => 'party_size',
                 'align' => 'right',
+                'priority' => 3,
             ],
             [
                 'label' => __('Horario'),
@@ -70,11 +74,13 @@ class TableReservations extends Datatable
                     );
                 },
                 'html' => true,
+                'priority' => 2,
             ],
             [
                 'label' => __('Estado'),
                 'type' => 'badge',
                 'field' => 'status',
+                'priority' => 1,
                 'options' => [
                     TableReservation::STATUS_PENDING => ['label' => __('Pendiente'), 'class' => 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-100'],
                     TableReservation::STATUS_CONFIRMED => ['label' => __('Confirmada'), 'class' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100'],
@@ -118,6 +124,7 @@ class TableReservations extends Datatable
                 'html' => true,
                 'th_class' => 'px-6 py-3 text-right',
                 'td_class' => 'px-6 py-4 text-right',
+                'priority' => 1,
             ],
         ];
     }

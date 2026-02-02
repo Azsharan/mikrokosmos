@@ -38,6 +38,7 @@ class Reservations extends Datatable
                 'type' => 'text',
                 'field' => 'code',
                 'text_class' => 'font-mono text-sm',
+                'priority' => 1,
             ],
             [
                 'label' => __('Product'),
@@ -52,6 +53,7 @@ class Reservations extends Datatable
                     );
                 },
                 'html' => true,
+                'priority' => 1,
             ],
             [
                 'label' => __('Customer'),
@@ -67,17 +69,20 @@ class Reservations extends Datatable
                     );
                 },
                 'html' => true,
+                'priority' => 1,
             ],
             [
                 'label' => __('Quantity'),
                 'type' => 'integer',
                 'field' => 'quantity',
                 'align' => 'right',
+                'priority' => 3,
             ],
             [
                 'label' => __('Status'),
                 'type' => 'badge',
                 'field' => 'status',
+                'priority' => 1,
                 'options' => [
                     'pending' => [
                         'label' => __('Pending'),
@@ -99,6 +104,7 @@ class Reservations extends Datatable
                 'type' => 'datetime',
                 'field' => 'created_at',
                 'format_string' => 'Y-m-d H:i',
+                'priority' => 3,
             ],
             [
                 'label' => __('Actions'),
@@ -136,6 +142,7 @@ class Reservations extends Datatable
                 'html' => true,
                 'th_class' => 'px-6 py-3 text-right',
                 'td_class' => 'px-6 py-4 text-right',
+                'priority' => 1,
             ],
         ];
     }

@@ -34,6 +34,7 @@ class Categories extends Datatable
         return [
             [
                 'label' => __('Name'),
+                'priority' => 1,
                 'format' => function (Category $category) {
                     return sprintf(
                         '<div>
@@ -51,11 +52,13 @@ class Categories extends Datatable
                 'type' => 'text',
                 'field' => 'parent.name',
                 'default' => __('None'),
+                'priority' => 2,
             ],
             [
                 'label' => __('Status'),
                 'type' => 'badge',
                 'field' => 'is_active',
+                'priority' => 1,
                 'options' => [
                     true => [
                         'label' => __('Active'),
@@ -71,6 +74,7 @@ class Categories extends Datatable
                 'label' => __('Order'),
                 'type' => 'integer',
                 'field' => 'order',
+                'priority' => 3,
             ],
             [
                 'label' => __('Updated'),
@@ -78,6 +82,7 @@ class Categories extends Datatable
                 'field' => 'updated_at',
                 'format_string' => 'Y-m-d H:i',
                 'align' => 'right',
+                'priority' => 4,
             ],
         ];
     }

@@ -40,11 +40,13 @@ class Newsletters extends Datatable
                 'label' => __('Título'),
                 'field' => 'title',
                 'type' => 'text',
+                'priority' => 1,
             ],
             [
                 'label' => __('Estado'),
                 'type' => 'badge',
                 'field' => 'status',
+                'priority' => 1,
                 'options' => [
                     'draft' => ['label' => __('Borrador'), 'class' => 'bg-zinc-100 text-zinc-700'],
                     'scheduled' => ['label' => __('Programado'), 'class' => 'bg-amber-100 text-amber-700'],
@@ -57,12 +59,14 @@ class Newsletters extends Datatable
                 'type' => 'datetime',
                 'field' => 'sent_at',
                 'default' => __('Pendiente'),
+                'priority' => 4,
             ],
             [
                 'label' => __('Programada para'),
                 'type' => 'datetime',
                 'field' => 'scheduled_at',
                 'default' => __('No programada'),
+                'priority' => 1,
             ],
             [
                 'label' => __('Acciones'),
@@ -70,6 +74,7 @@ class Newsletters extends Datatable
                 'align' => 'right',
                 'th_class' => 'px-6 py-3 text-right',
                 'td_class' => 'px-6 py-4 text-right',
+                'priority' => 1,
                 'format' => function (Newsletter $newsletter, array $column) {
                     return view('livewire.admin.newsletters.actions', [
                         'newsletter' => $newsletter,

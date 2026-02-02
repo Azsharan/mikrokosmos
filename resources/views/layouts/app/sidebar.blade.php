@@ -36,10 +36,10 @@
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="envelope" :href="route('admin.newsletters.index')" :current="request()->routeIs('admin.newsletters.*')" wire:navigate>
                         {{ __('Newsletters') }}
                     </flux:sidebar.item>
-                    <details class="group text-[#f6d98f] pl-3" {{ $eventsMenuOpen ? 'open' : '' }}>
-                        <summary class="flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-white/80 hover:text-[#ffe599] hover:bg-white/10 [&::-webkit-details-marker]:hidden">
-                            <span class="flex items-center gap-2 font-medium">
-                                <flux:icon.calendar class="size-4" />
+                    <details class="group text-[#f6d98f]" {{ $eventsMenuOpen ? 'open' : '' }}>
+                        <summary class="flex cursor-pointer items-center justify-between rounded-lg text-white/80 hover:text-[#ffe599] hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center font-medium">
+                                <flux:sidebar.item icon="calendar" class="size-4" />
                                 {{ __('Events') }}
                             </span>
                             <flux:icon.chevron-down class="size-4 text-white/70 transition duration-150 group-open:rotate-180" />
@@ -56,10 +56,10 @@
                             </flux:sidebar.item>
                         </div>
                     </details>
-                    <details class="group text-[#f6d98f] pl-3" {{ $usersMenuOpen ? 'open' : '' }}>
-                        <summary class="flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-white/80 hover:text-[#ffe599] hover:bg-white/10 [&::-webkit-details-marker]:hidden">
-                            <span class="flex items-center gap-2 font-medium">
-                                <flux:icon.users class="size-4" />
+                    <details class="group text-[#f6d98f]" {{ $usersMenuOpen ? 'open' : '' }}>
+                        <summary class="flex cursor-pointer items-center justify-between rounded-lg text-white/80 hover:text-[#ffe599] hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center font-medium">
+                                <flux:sidebar.item icon="users" class="size-4" />
                                 {{ __('User Management') }}
                             </span>
                             <flux:icon.chevron-down class="size-4 text-white/70 transition duration-150 group-open:rotate-180" />
