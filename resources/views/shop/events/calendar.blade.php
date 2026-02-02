@@ -79,7 +79,7 @@
                         @php($dayEvents = $eventsByDate[$dateKey] ?? collect())
                         @php($isSelected = $selectedDate && $selectedDate->isSameDay($date))
                         <a
-                            href="{{ route('shop.events.index', ['month' => $currentMonth->format('Y-m'), 'day' => $date->toDateString()]) }}"
+                            href="{{ route('shop.events.index', ['month' => $currentMonth->format('Y-m'), 'day' => $date->toDateString()]) }}#event-registration"
                             class="min-h-[120px] rounded-2xl border p-3 text-sm transition hover:-translate-y-0.5 hover:border-amber-200 {{ $isSelected ? 'border-amber-300 bg-amber-50' : 'border-zinc-200/70' }}"
                             wire:navigate
                         >
@@ -112,7 +112,7 @@
                 </div>
             @endforeach
 
-            <div class="mt-10 rounded-3xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm">
+            <div id="event-registration" class="mt-10 rounded-3xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm scroll-mt-32">
                 @if ($selectedDate)
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                         <div>
@@ -195,4 +195,13 @@
             </a>
         </div>
     </section>
+    @if ($selectedDate)
+        <script>
+            window.requestAnimationFrame(() => {
+                if (window.location.hash === '#event-registration') {
+                    document.getElementById('event-registration')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        </script>
+    @endif
 </x-layouts::shop>

@@ -80,4 +80,31 @@ class NotificationsBell extends Component
         $this->notifications = $user->notifications()->latest()->take(10)->get();
         $this->unreadCount = $user->unreadNotifications()->count();
     }
+
+    public function openNotification(string $notificationId)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return;
+        }
+
+        /** @var \Illuminate\Notifications\DatabaseNotification|null $notification */
+        $notification = $user->notifications()->whereKey($notificationId)->first();
+
+        if (! $notification) {
+            return;
+        }
+
+        if ($notification->read_at === null) {
+            $notification->markAsRead();
+            $this->loadNotifications();
+        }
+
+        $url = $notification->data['url'] ?? null;
+
+        if ($url) {
+            return $this->redirect($url, navigate: true);
+        }
+    }
 }

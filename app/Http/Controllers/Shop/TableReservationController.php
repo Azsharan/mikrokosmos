@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\TableReservation;
+use App\Models\User;
+use App\Notifications\NewTableReservationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -25,7 +28,9 @@ class TableReservationController extends Controller
             ->where('reserved_for', '<=', now()->copy()->addWeek())
             ->orderBy('reserved_for')
             ->get()
-            ->groupBy(fn (TableReservation $reservation) => $reservation->reserved_for->toDateString());
+            ->groupBy(fn (TableReservation $reservation) => $reservation->reserved_for->toDateString())
+            ->map(fn ($reservations) => $reservations->filter(fn (TableReservation $reservation) => $reservation->status === TableReservation::STATUS_CONFIRMED))
+            ->filter->isNotEmpty();
 
         return view('shop.table-reservations', [
             'user' => $user,
@@ -111,6 +116,8 @@ class TableReservationController extends Controller
             'notes' => $validated['notes'] ?? null,
         ]);
 
+        $this->notifyAdmins($reservation);
+
         return redirect()
             ->route('shop.tables.index')
             ->with('table_reservation_status', __('Tu mesa quedó apartada. Recibirás confirmación en tienda al llegar. Código: :code', [
@@ -131,5 +138,16 @@ class TableReservationController extends Controller
         return redirect()
             ->route('shop.tables.index')
             ->with('table_reservation_status', __('Tu reserva fue cancelada.'));
+    }
+
+    protected function notifyAdmins(TableReservation $reservation): void
+    {
+        $admins = User::query()->get();
+
+        if ($admins->isEmpty()) {
+            return;
+        }
+
+        Notification::send($admins, new NewTableReservationNotification($reservation));
     }
 }

@@ -21,7 +21,12 @@
 
             <div class="space-y-2 max-h-64 overflow-y-auto">
                 @forelse ($notifications as $notification)
-                    <div class="rounded-lg border px-3 py-2 text-sm @if(is_null($notification->read_at)) border-primary-200 bg-primary-50/60 dark:border-primary-500/30 dark:bg-primary-500/10 @else border-neutral-200 dark:border-neutral-700 @endif">
+                    @php($notificationUrl = $notification->data['url'] ?? null)
+                    <a
+                        href="{{ $notificationUrl ?: '#' }}"
+                        class="block rounded-lg border px-3 py-2 text-sm transition hover:border-primary-300 hover:bg-primary-50/40 dark:hover:border-primary-500/40 dark:hover:bg-primary-500/5 @if(is_null($notification->read_at)) border-primary-200 bg-primary-50/60 dark:border-primary-500/30 dark:bg-primary-500/10 @else border-neutral-200 dark:border-neutral-700 @endif"
+                        wire:click.prevent="openNotification('{{ $notification->id }}')"
+                    >
                         <p class="font-semibold text-neutral-900 dark:text-white">
                             {{ $notification->data['title'] ?? __('Nueva reserva') }}
                         </p>
@@ -34,12 +39,10 @@
                         <div class="mt-2 flex items-center justify-between text-xs text-neutral-500">
                             <span class="font-mono text-xs text-neutral-600 dark:text-neutral-300">#{{ $notification->data['code'] ?? '' }}</span>
                             @if (is_null($notification->read_at))
-                                <button type="button" wire:click="markAsRead('{{ $notification->id }}')" class="text-primary-600 hover:underline">
-                                    {{ __('Marcar leído') }}
-                                </button>
+                                <span class="text-primary-600">{{ __('Ver detalle') }}</span>
                             @endif
                         </div>
-                    </div>
+                    </a>
                 @empty
                     <p class="text-center text-xs text-neutral-500 dark:text-neutral-400">
                         {{ __('Sin notificaciones pendientes') }}
