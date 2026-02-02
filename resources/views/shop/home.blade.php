@@ -1,7 +1,7 @@
 @php($appName = config('app.name', 'Mikrokosmos'))
 
 <x-layouts::shop :title="__('Home')">
-    <section class="relative overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white">
+    {{-- <section class="relative overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800 text-white">
         <div class="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 lg:flex-row lg:items-center lg:px-8 lg:py-24">
             <div class="flex-1 space-y-6">
                 <p class="text-sm font-semibold uppercase tracking-[0.2em] text-white">{{ $appName }}</p>
@@ -42,7 +42,7 @@
                 </div>
             @endif
         </div>
-    </section>
+    </section> --}}
 
     @if ($categories->isNotEmpty())
         <section id="categories" class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
