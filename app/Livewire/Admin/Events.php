@@ -47,6 +47,23 @@ class Events extends Datatable
             ->orderByDesc('start_at');
     }
 
+    protected function availableFilters(): array
+    {
+        return [
+            'is_approved' => [
+                'type' => 'select',
+                'label' => __('Estado de aprobación'),
+                'field' => 'is_approved',
+                'default' => '',
+                'placeholder' => __('Todos'),
+                'options' => [
+                    '0' => __('Pendientes'),
+                    '1' => __('Aprobados'),
+                ],
+            ],
+        ];
+    }
+
     protected function columns(): array
     {
         return [
@@ -135,6 +152,22 @@ class Events extends Datatable
                     ],
                 ],
             ],
+            [
+                'label' => __('Approved'),
+                'type' => 'badge',
+                'field' => 'is_approved',
+                'priority' => 1,
+                'options' => [
+                    true => [
+                'label' => __('Approved'),
+                        'class' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100',
+                    ],
+                    false => [
+                'label' => __('Pending'),
+                        'class' => 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-100',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -175,14 +208,14 @@ class Events extends Datatable
                 'placeholder' => __('Select a category'),
             ],
             'start_at' => [
-                'type' => 'text',
+                'type' => 'datetime-local',
                 'label' => __('Start'),
-                'placeholder' => '2026-01-20 10:00',
+                'placeholder' => '2026-01-20T10:00',
             ],
             'end_at' => [
-                'type' => 'text',
+                'type' => 'datetime-local',
                 'label' => __('End'),
-                'placeholder' => '2026-01-20 12:00',
+                'placeholder' => '2026-01-20T12:00',
             ],
             'location' => [
                 'type' => 'text',
@@ -202,6 +235,11 @@ class Events extends Datatable
                 'type' => 'checkbox',
                 'label' => __('Published'),
                 'default' => false,
+            ],
+            'is_approved' => [
+                'type' => 'checkbox',
+                'label' => __('Approved'),
+                'default' => true,
             ],
         ];
     }
@@ -226,6 +264,7 @@ class Events extends Datatable
             'formData.is_online' => ['boolean'],
             'formData.capacity' => ['required', 'integer', 'min:1'],
             'formData.is_published' => ['boolean'],
+            'formData.is_approved' => ['boolean'],
         ];
     }
 
@@ -248,6 +287,8 @@ class Events extends Datatable
     {
         $data = $this->ensureSlug($data);
 
+        $data['is_approved'] = true;
+
         return parent::createRecord($data);
     }
 
@@ -263,6 +304,16 @@ class Events extends Datatable
         if (empty($data['slug']) && ! empty($data['name'])) {
             $data['slug'] = Str::slug($data['name']);
         }
+
+        return $data;
+    }
+
+    protected function formDataFromRecord(Model $record): array
+    {
+        $data = parent::formDataFromRecord($record);
+
+        $data['start_at'] = $record->start_at ? $record->start_at->format('Y-m-d\\TH:i') : null;
+        $data['end_at'] = $record->end_at ? $record->end_at->format('Y-m-d\\TH:i') : null;
 
         return $data;
     }

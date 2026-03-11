@@ -24,6 +24,7 @@ class Event extends Model
         'is_online',
         'capacity',
         'is_published',
+        'is_approved',
         'cover_image',
         'metadata',
     ];
@@ -35,6 +36,7 @@ class Event extends Model
         'end_at' => 'datetime',
         'is_online' => 'boolean',
         'is_published' => 'boolean',
+        'is_approved' => 'boolean',
         'capacity' => 'integer',
         'metadata' => 'array',
     ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class EventRegistrationController extends Controller
 {
@@ -40,5 +41,28 @@ class EventRegistrationController extends Controller
         ]);
 
         return back()->with('event_registration_status', __('Registro confirmado. Nos vemos en el evento!'));
+    }
+
+    public function destroy(Request $request, Event $event): RedirectResponse
+    {
+        $shopUser = $request->user('shop');
+
+        if (! $shopUser) {
+            return redirect()->guest(route('shop.login'));
+        }
+
+        $registration = $event->registrations()
+            ->where('shop_user_id', $shopUser->id)
+            ->first();
+
+        if (! $registration) {
+            return back()->withErrors([
+                'event' => __('No estás registrado en este evento.'),
+            ], 'eventRegistration');
+        }
+
+        $registration->delete();
+
+        return back()->with('event_registration_status', __('Tu registro fue cancelado.'));
     }
 }
