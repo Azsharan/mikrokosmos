@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
 use Illuminate\View\View;
 
@@ -14,13 +13,6 @@ class HomeController extends Controller
      */
     public function __invoke(): View
     {
-        $categories = Category::query()
-            ->where('is_active', true)
-            ->orderBy('order')
-            ->orderBy('name')
-            ->take(6)
-            ->get();
-
         $featuredProducts = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
@@ -42,7 +34,6 @@ class HomeController extends Controller
         return view('shop.home', [
             'tagline' => $tagline,
             'sellingPoints' => $highlights,
-            'categories' => $categories,
             'featuredProducts' => $featuredProducts,
         ]);
     }

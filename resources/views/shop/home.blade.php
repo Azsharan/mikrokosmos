@@ -17,9 +17,6 @@
                     <a href="#featured" class="rounded-full bg-white px-6 py-2 font-semibold text-zinc-900 transition hover:bg-zinc-100">
                         {{ __('Ver productos destacados') }}
                     </a>
-                    <a href="#community" class="rounded-full border border-white/40 px-6 py-2 font-semibold text-white transition hover:border-white hover:bg-white/10">
-                        {{ __('Conoce la comunidad') }}
-                    </a>
                     <a href="{{ route('shop.events.index') }}" class="rounded-full bg-amber-400/90 px-6 py-2 font-semibold text-amber-950 transition hover:bg-amber-300" wire:navigate>
                         {{ __('Calendario de eventos') }}
                     </a>
@@ -43,43 +40,6 @@
             @endif
         </div>
     </section> --}}
-
-    @if ($categories->isNotEmpty())
-        <section id="categories" class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
-            <div class="mb-10 flex flex-col gap-2">
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Colecciones disponibles') }}</p>
-                <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                    <h2 class="text-3xl font-semibold text-zinc-900">{{ __('Explora por categoría') }}</h2>
-                    <p class="max-w-2xl text-sm text-zinc-600">
-                        {{ __('Ordenamos las líneas de producto más queridas para que encuentres rápido tus imprescindibles y descubras nuevas obsesiones.') }}
-                    </p>
-                </div>
-            </div>
-
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                @foreach ($categories as $category)
-                    <a href="{{ route('shop.categories.show', $category) }}" class="group flex flex-col gap-4 rounded-3xl border border-zinc-200/80 bg-white/90 p-6 shadow-sm ring-1 ring-transparent transition hover:-translate-y-1 hover:ring-amber-200" wire:navigate>
-                        <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
-                            <span>{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                            <span>{{ __('Colección') }}</span>
-                        </div>
-                        <div class="space-y-2">
-                            <h3 class="text-2xl font-semibold text-zinc-900 group-hover:text-amber-700">{{ $category->name }}</h3>
-                            @if ($category->description)
-                                <p class="text-sm text-zinc-600">{{ \Illuminate\Support\Str::limit($category->description, 110) }}</p>
-                            @else
-                                <p class="text-sm text-zinc-600">{{ __('Una selección curada de lanzamientos, reposiciones y ediciones especiales.') }}</p>
-                            @endif
-                        </div>
-                        <div class="flex items-center justify-between text-sm font-semibold text-zinc-700">
-                            <span>{{ __('Explorar') }}</span>
-                            <span aria-hidden="true" class="transition group-hover:translate-x-1">&rarr;</span>
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        </section>
-    @endif
 
     @if ($featuredProducts->isNotEmpty())
         <section id="featured" class="bg-white">
@@ -133,42 +93,4 @@
             </div>
         </section>
     @endif
-
-    <section id="community" class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
-        <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-amber-100 via-rose-100 to-sky-100 p-8 lg:p-12">
-            <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-                <div class="space-y-4 text-zinc-900">
-                    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-700">{{ __('Comunidad Mikrokosmos') }}</p>
-                    <h2 class="text-3xl font-semibold">{{ __('Zona de juego, torneos y lanzamientos en vivo') }}</h2>
-                    <p class="text-sm text-zinc-700">
-                        {{ __('Organizamos experiencias para que compartas la mesa de juego, pruebes nuevos decks, armes squads de K-pop y te enteres de las preventas más esperadas antes que nadie.') }}
-                    </p>
-                    <div class="flex flex-wrap gap-4 text-sm font-semibold">
-                        <span class="rounded-full bg-white/80 px-4 py-2 text-zinc-800">{{ __('Eventos semanales') }}</span>
-                        <span class="rounded-full bg-white/80 px-4 py-2 text-zinc-800">{{ __('Zona TCG + snacks') }}</span>
-                        <span class="rounded-full bg-white/80 px-4 py-2 text-zinc-800">{{ __('Workshops y demos') }}</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 text-center text-zinc-900">
-                    <div class="rounded-3xl bg-white/80 px-4 py-6">
-                        <p class="text-4xl font-semibold">{{ $categories->count() }}</p>
-                        <p class="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Colecciones activas') }}</p>
-                    </div>
-                    <div class="rounded-3xl bg-white/80 px-4 py-6">
-                        <p class="text-4xl font-semibold">{{ $featuredProducts->count() }}</p>
-                        <p class="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Lanzamientos destacados') }}</p>
-                    </div>
-                    <div class="rounded-3xl bg-white/80 px-4 py-6">
-                        <p class="text-4xl font-semibold">{{ __('+15') }}</p>
-                        <p class="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Eventos al mes') }}</p>
-                    </div>
-                    <div class="rounded-3xl bg-white/80 px-4 py-6">
-                        <p class="text-4xl font-semibold">{{ __('24/7') }}</p>
-                        <p class="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Comunidad online') }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </x-layouts::shop>

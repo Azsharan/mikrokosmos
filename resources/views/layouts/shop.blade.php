@@ -3,9 +3,8 @@
 @php
     $resolvedTitle = $title ?? config('app.name');
     $storeNavLinks = [
-        ['href' => '#categories', 'label' => __('Colecciones')],
+        ['href' => route('shop.categories.index'), 'label' => __('Colecciones')],
         ['href' => '#featured', 'label' => __('Destacados')],
-        ['href' => '#community', 'label' => __('Comunidad')],
         ['href' => route('shop.events.index'), 'label' => __('Eventos')],
         ['href' => route('shop.tables.index'), 'label' => __('Reservar mesa')],
     ];
@@ -58,7 +57,19 @@
                         @endforeach
                     </nav>
 
-                    <div class="flex flex-1 flex-wrap items-center justify-end gap-3 text-sm">
+                    <button
+                        type="button"
+                        id="shop-mobile-menu-button"
+                        class="ml-auto inline-flex items-center rounded-full border border-[#d0bbff]/35 bg-[#2c1a56]/50 px-3 py-2 text-sm font-semibold text-[#f4ebff] transition hover:bg-[#42256a]/50 md:hidden"
+                        aria-expanded="false"
+                        aria-controls="shop-mobile-menu"
+                        aria-label="{{ __('Abrir menú') }}"
+                    >
+                        <span id="shop-mobile-menu-icon-open" class="text-xl leading-none">☰</span>
+                        <span id="shop-mobile-menu-icon-close" class="hidden text-xl leading-none">✕</span>
+                    </button>
+
+                    <div class="hidden flex flex-1 flex-wrap items-center justify-end gap-3 text-sm md:flex">
 
                         @guest('shop')
                             @foreach ($guestActions as $action)
@@ -81,7 +92,62 @@
                         @endguest
                     </div>
                 </div>
+
+                <div
+                    id="shop-mobile-menu"
+                    class="hidden border-t border-[#b49eff]/35 bg-gradient-to-b from-[#2c1a56] via-[#301d5b] to-[#1c1035] md:hidden"
+                >
+                    <nav class="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 text-sm font-medium text-[#ebe1ff]">
+                        @foreach ($storeNavLinks as $link)
+                            <a href="{{ $link['href'] }}" class="rounded-full px-3 py-2 transition hover:bg-white/15 hover:text-white">
+                                {{ $link['label'] }}
+                            </a>
+                        @endforeach
+
+                        <div class="mt-1 flex flex-col gap-2 border-t border-[#ffffff]/20 pt-3">
+                            @guest('shop')
+                                @foreach ($guestActions as $action)
+                                    <a href="{{ $action['href'] }}" class="{{ $buttonVariants[$action['variant']] ?? $buttonVariants['ghost'] }}">
+                                        {{ $action['label'] }}
+                                    </a>
+                                @endforeach
+                            @else
+                                @foreach ($authActions as $action)
+                                    <a href="{{ $action['href'] }}" class="{{ $buttonVariants[$action['variant']] ?? $buttonVariants['ghost'] }}">
+                                        {{ $action['label'] }}
+                                    </a>
+                                @endforeach
+                                <form method="POST" action="{{ route('shop.logout') }}" class="flex">
+                                    @csrf
+                                    <button type="submit" class="{{ $buttonVariants['primary'] }}">
+                                        {{ __('Cerrar sesión') }}
+                                    </button>
+                                </form>
+                            @endguest
+                        </div>
+                    </nav>
+                </div>
             </header>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const button = document.getElementById('shop-mobile-menu-button');
+                    const menu = document.getElementById('shop-mobile-menu');
+                    const openIcon = document.getElementById('shop-mobile-menu-icon-open');
+                    const closeIcon = document.getElementById('shop-mobile-menu-icon-close');
+
+                    if (!button || !menu || !openIcon || !closeIcon) {
+                        return;
+                    }
+
+                    button.addEventListener('click', function () {
+                        const isOpen = menu.classList.toggle('hidden');
+                        button.setAttribute('aria-expanded', String(!isOpen));
+                        openIcon.classList.toggle('hidden');
+                        closeIcon.classList.toggle('hidden');
+                    });
+                });
+            </script>
 
             <main class="flex-1">
                 {{ $slot }}
