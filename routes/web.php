@@ -27,10 +27,14 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('productos/{product:slug}', [ProductController::class, 'show'])->name('shop.products.show');
 Route::post('productos/{product:slug}/reservations', [ProductReservationController::class, 'store'])
     ->name('shop.products.reserve');
+Route::get('colecciones', [CategoryController::class, 'index'])->name('shop.categories.index');
 Route::get('colecciones/{category:slug}', [CategoryController::class, 'show'])->name('shop.categories.show');
 Route::get('eventos', EventCalendarController::class)->name('shop.events.index');
+Route::post('eventos/sugerir', [EventCalendarController::class, 'suggest'])->name('shop.events.suggest');
 Route::post('eventos/{event:slug}/registro', [EventRegistrationController::class, 'store'])
     ->name('shop.events.register');
+Route::delete('eventos/{event:slug}/registro', [EventRegistrationController::class, 'destroy'])
+    ->name('shop.events.unregister');
 
 Route::prefix('tienda')->name('shop.')->group(function () {
     Route::middleware('guest:shop')->group(function () {

@@ -10,7 +10,7 @@
                     {{ $category->description ?: __('Una selección especial de productos dentro de esta categoría.') }}
                 </p>
                 <div class="flex flex-wrap gap-3 text-sm">
-                    <a href="{{ route('home') }}#categories" class="rounded-full border border-white/30 px-6 py-2 font-semibold text-white transition hover:bg-white/10">
+                    <a href="{{ route('shop.categories.index') }}" class="rounded-full border border-white/30 px-6 py-2 font-semibold text-white transition hover:bg-white/10">
                         {{ __('Ver todas las colecciones') }}
                     </a>
                     <a href="{{ route('home') }}#featured" class="rounded-full bg-[#f6d98f] px-6 py-2 font-semibold text-[#402f00] transition hover:bg-[#ffd96e]">
