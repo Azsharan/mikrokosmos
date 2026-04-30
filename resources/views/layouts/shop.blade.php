@@ -3,8 +3,6 @@
 @php
     $resolvedTitle = $title ?? config('app.name');
     $storeNavLinks = [
-        ['href' => route('shop.categories.index'), 'label' => __('Colecciones')],
-        ['href' => '#featured', 'label' => __('Destacados')],
         ['href' => route('shop.events.index'), 'label' => __('Eventos')],
         ['href' => route('shop.tables.index'), 'label' => __('Reservar mesa')],
     ];

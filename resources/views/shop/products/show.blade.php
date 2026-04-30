@@ -1,6 +1,4 @@
 @php($appName = config('app.name', 'Mikrokosmos'))
-@php($shopCustomer = auth('shop')->user())
-
 <x-layouts::shop :title="$product->name">
     <section class="bg-gradient-to-br from-[#150a24] via-[#2d154c] to-[#0f0617] text-white">
         <div class="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 lg:flex-row lg:items-center lg:gap-16 lg:px-8">
@@ -17,20 +15,20 @@
                         <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/60">{{ __('Precio') }}</p>
                         <p class="mt-2 text-4xl font-semibold text-[#ffe599]">${{ number_format((float) $product->price, 2) }}</p>
                     </div>
-                    <div class="rounded-2xl bg-white/5 p-4">
+                    {{-- <div class="rounded-2xl bg-white/5 p-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/60">{{ __('Disponibilidad') }}</p>
                         <p class="mt-2 text-4xl font-semibold text-emerald-300">
                             {{ $product->stock > 0 ? $product->stock : __('Agotado') }}
                         </p>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="flex flex-wrap gap-4 text-sm">
-                    <a href="#details" class="rounded-full bg-[#f6d98f] px-6 py-2 font-semibold text-[#402f00] transition hover:bg-[#ffd96e]">
+                    {{-- <a href="#details" class="rounded-full bg-[#f6d98f] px-6 py-2 font-semibold text-[#402f00] transition hover:bg-[#ffd96e]">
                         {{ __('Ver especificaciones') }}
-                    </a>
-                    <a href="{{ route('home') }}#featured" class="rounded-full border border-white/30 px-6 py-2 font-semibold text-white transition hover:bg-white/10">
+                    </a> --}}
+                    {{-- <a href="{{ route('home') }}#featured" class="rounded-full border border-white/30 px-6 py-2 font-semibold text-white transition hover:bg-white/10">
                         {{ __('Volver a destacados') }}
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 
@@ -40,7 +38,7 @@
                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full rounded-2xl object-cover">
                     </div>
                 @endif
-                <div class="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-white/80">
+                {{-- <div class="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-white/80">
                     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/60">{{ __('Ficha rápida') }}</p>
                     <dl class="grid gap-4">
                         <div>
@@ -67,14 +65,14 @@
                             </div>
                         </div>
                     @endif
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
 
     <section id="details" class="bg-white">
         <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-16 lg:px-8 lg:flex-row">
-            <div class="flex-1 space-y-6">
+            {{-- <div class="flex-1 space-y-6">
                 <h2 class="text-3xl font-semibold text-zinc-900">{{ __('Detalles del producto') }}</h2>
                 <div class="space-y-4 text-sm leading-relaxed text-zinc-700">
                     @if ($product->description)
@@ -93,9 +91,9 @@
                         <p class="mt-2 text-2xl font-semibold text-zinc-900">${{ number_format((float) $product->price, 2) }}</p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
-            <div id="reservation" class="w-full max-w-md space-y-6 rounded-3xl border border-zinc-200/70 p-6">
+            {{-- <div id="reservation" class="w-full max-w-md space-y-6 rounded-3xl border border-zinc-200/70 p-6">
                 <h3 class="text-xl font-semibold text-zinc-900">{{ __('Información adicional') }}</h3>
                 <dl class="space-y-4 text-sm text-zinc-700">
                     <div class="flex justify-between">
@@ -110,126 +108,24 @@
                         <dt>{{ __('Actualizado') }}</dt>
                         <dd class="font-semibold">{{ optional($product->updated_at)->diffForHumans() }}</dd>
                     </div>
-                </dl>
+                </dl> --}}
 
-                <div class="rounded-2xl bg-gradient-to-br from-amber-100 to-emerald-100 p-5 text-sm text-zinc-800">
+                {{-- <div class="rounded-2xl bg-gradient-to-br from-amber-100 to-emerald-100 p-5 text-sm text-zinc-800">
                     <p class="font-semibold">{{ __('¿Listo para llevarlo a tu colección?') }}</p>
-                    <p class="mt-2 text-zinc-700">{{ __('Visítanos en tienda física o contáctanos por WhatsApp para apartarlo, hacemos envíos a todo el país.') }}</p>
-                </div>
+                    <p class="mt-2 text-zinc-700">{{ __('Visítanos en tienda física o contáctanos.') }}</p>
+                </div> --}}
 
-                <div class="space-y-4 rounded-2xl border border-zinc-200/70 p-5">
+                {{-- <div class="space-y-4 rounded-2xl border border-zinc-200/70 p-5">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Reserva en línea') }}</p>
-                        <p class="mt-2 text-sm text-zinc-600">{{ __('Déjanos tus datos y te contactaremos para confirmar la disponibilidad y coordinar la entrega.') }}</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Reservas temporales') }}</p>
+                        <p class="mt-2 text-sm text-zinc-600">{{ __('La reserva en línea está deshabilitada temporalmente. Puedes visitarnos en tienda o escribirnos para consultar disponibilidad.') }}</p>
                     </div>
 
-                    @if (session('reservation_status'))
-                        <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                            {{ session('reservation_status') }}
-                        </div>
-                    @endif
-
-                    <form action="{{ route('shop.products.reserve', $product) }}" method="POST" class="space-y-4">
-                        @csrf
-                        @if (! $shopCustomer)
-                            <div>
-                                <label for="reservation-name" class="text-sm font-medium text-zinc-800">{{ __('Nombre completo') }}</label>
-                                <input
-                                    type="text"
-                                    id="reservation-name"
-                                    name="name"
-                                    value="{{ old('name') }}"
-                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                    required
-                                >
-                                @error('name')
-                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="reservation-email" class="text-sm font-medium text-zinc-800">{{ __('Correo electrónico') }}</label>
-                                <input
-                                    type="email"
-                                    id="reservation-email"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                    required
-                                >
-                                @error('email')
-                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="reservation-phone" class="text-sm font-medium text-zinc-800">{{ __('Teléfono (opcional)') }}</label>
-                                <input
-                                    type="text"
-                                    id="reservation-phone"
-                                    name="phone"
-                                    value="{{ old('phone') }}"
-                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                    placeholder="+34 600 000 000"
-                                >
-                                @error('phone')
-                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        @else
-                            <div class="rounded-lg border border-emerald-200 bg-emerald-50/60 px-3 py-2 text-sm text-emerald-900">
-                                <p class="font-semibold">{{ __('Reservarás como :name', ['name' => $shopCustomer->name]) }}</p>
-                                <p class="text-xs text-emerald-700">{{ $shopCustomer->email }} @if($shopCustomer->phone) · {{ $shopCustomer->phone }} @endif</p>
-                                <p class="mt-1 text-xs text-emerald-800">{{ __('Si necesitas modificar tus datos, actualízalos en tu cuenta de la tienda.') }}</p>
-                            </div>
-                        @endif
-
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="reservation-quantity" class="text-sm font-medium text-zinc-800">{{ __('Cantidad') }}</label>
-                                <input
-                                    type="number"
-                                    id="reservation-quantity"
-                                    name="quantity"
-                                    min="1"
-                                    max="10"
-                                    value="{{ old('quantity', 1) }}"
-                                    class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                    required
-                                >
-                                @error('quantity')
-                                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="reservation-notes" class="text-sm font-medium text-zinc-800">{{ __('Notas adicionales') }}</label>
-                            <textarea
-                                id="reservation-notes"
-                                name="notes"
-                                rows="3"
-                                class="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-primary-500 focus:ring-primary-500"
-                                placeholder="{{ __('Cuéntanos si necesitas envío, empaquetado especial o fecha estimada.') }}"
-                            >{{ old('notes') }}</textarea>
-                            @error('notes')
-                                <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <p class="rounded-lg bg-amber-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-amber-700">
-                            {{ __('Tu reserva se mantendrá disponible por 5 días laborables. Pasado ese plazo, el producto volverá al inventario.') }}
-                        </p>
-
-                        <button
-                            type="submit"
-                            class="w-full rounded-lg border border-[#c6b3ff]/40 bg-[#5a38a6] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#5a38a6]/30 transition hover:bg-[#6f4ec4] focus:outline-none focus:ring-2 focus:ring-[#f6d98f] focus:ring-offset-2"
-                        >
-                            {{ __('Enviar y confirmar reserva') }}
-                        </button>
-                    </form>
-                </div>
-            </div>
+                    <p class="rounded-lg bg-amber-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-amber-700">
+                        {{ __('Reserva en línea temporalmente no disponible') }}
+                    </p>
+                </div> --}}
+            {{-- </div> --}}
         </div>
     </section>
 

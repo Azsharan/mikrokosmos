@@ -23,8 +23,8 @@ class ProductPageTest extends TestCase
             ->assertSee($product->name)
             ->assertSee(number_format(49.99, 2))
             ->assertSee(__('Detalles del producto'))
-            ->assertSee(__('Reserva en línea'))
-            ->assertSee(__('Enviar y confirmar reserva'));
+            ->assertSee(__('Reservas temporales'))
+            ->assertSee(__('Reserva en línea temporalmente no disponible'));
     }
 
     public function test_inactive_products_return_not_found(): void
