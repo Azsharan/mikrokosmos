@@ -90,13 +90,16 @@ Route::middleware(['auth', 'verified'])
         Route::get('products', ProductsPage::class)->name('products.index');
         Route::get('reservations', ReservationsPage::class)->name('reservations.index');
         Route::get('table-reservations', \App\Livewire\Admin\TableReservations::class)->name('table-reservations.index');
-        Route::get('site-settings', \App\Livewire\Admin\SiteSettings::class)->name('site-settings.index');
         Route::get('newsletters', \App\Livewire\Admin\Newsletters::class)->name('newsletters.index');
         Route::get('events', EventsPage::class)->name('events.index');
         Route::get('event-types', EventTypesPage::class)->name('event-types.index');
         Route::get('shop-users', ShopUsersPage::class)->name('shop-users.index');
-        Route::get('staff', StaffUsersPage::class)->name('staff.index');
         Route::get('event-registrations', EventRegistrationsPage::class)->name('event-registrations.index');
+
+        Route::middleware('super_admin')->group(function () {
+            Route::get('site-settings', \App\Livewire\Admin\SiteSettings::class)->name('site-settings.index');
+            Route::get('staff', StaffUsersPage::class)->name('staff.index');
+        });
     });
 
 require __DIR__.'/settings.php';
