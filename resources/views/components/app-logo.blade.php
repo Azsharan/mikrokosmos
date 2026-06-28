@@ -34,8 +34,8 @@
 
     $logoImageSource = $logoImageSourceCache;
     $logoImageClasses = match (true) {
-        $theme === 'shop' && $sidebar => 'h-14 w-14 object-contain',
-        $theme === 'shop' => 'h-16 w-16 object-contain',
+        $theme === 'shop' && $sidebar => 'h-[59px] w-[59px] object-contain',
+        $theme === 'shop' => 'h-[67px] w-[67px] object-contain',
         $sidebar => 'h-10 w-10 object-contain',
         default => 'h-12 w-12 object-contain',
     };
