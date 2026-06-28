@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -42,6 +43,15 @@ class StaffUsers extends Datatable
                     e($user->email)
                 ),
                 'html' => true,
+            ],
+            [
+                'label' => __('Role'),
+                'field' => 'role',
+                'format' => fn (User $user) => $user->role === UserRole::SuperAdmin
+                    ? '<span class="font-semibold text-amber-600 dark:text-amber-400">' . __('Super Admin') . '</span>'
+                    : '<span class="text-neutral-500">' . __('Staff') . '</span>',
+                'html' => true,
+                'priority' => 1,
             ],
             [
                 'label' => __('Email Verified'),
@@ -89,6 +99,15 @@ class StaffUsers extends Datatable
                 'placeholder' => '••••••••',
                 'default' => '',
             ],
+            'role' => [
+                'type' => 'select',
+                'label' => __('Role'),
+                'options' => [
+                    UserRole::Staff->value => __('Staff'),
+                    UserRole::SuperAdmin->value => __('Super Admin'),
+                ],
+                'default' => UserRole::Staff->value,
+            ],
         ];
     }
 
@@ -107,6 +126,7 @@ class StaffUsers extends Datatable
                 'string',
                 'min:6',
             ],
+            'formData.role' => ['required', Rule::enum(UserRole::class)],
         ];
     }
 
@@ -116,6 +136,7 @@ class StaffUsers extends Datatable
             'formData.name' => __('Name'),
             'formData.email' => __('Email'),
             'formData.password' => __('Password'),
+            'formData.role' => __('Role'),
         ];
     }
 

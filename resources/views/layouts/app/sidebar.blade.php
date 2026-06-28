@@ -11,7 +11,7 @@
             </flux:sidebar.header>
 
             @php($eventsMenuOpen = request()->routeIs('admin.events.*') || request()->routeIs('admin.event-registrations.*') || request()->routeIs('admin.event-types.*'))
-            @php($usersMenuOpen = request()->routeIs('admin.shop-users.*') || request()->routeIs('admin.staff.*'))
+            @php($usersMenuOpen = request()->routeIs('admin.shop-users.*') || (auth()->user()->isSuperAdmin() && request()->routeIs('admin.staff.*')))
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid text-[#f6d98f]">
@@ -30,9 +30,11 @@
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="queue-list" :href="route('admin.table-reservations.index')" :current="request()->routeIs('admin.table-reservations.*')" wire:navigate>
                         {{ __('Table Reservations') }}
                     </flux:sidebar.item>
+                    @if(auth()->user()->isSuperAdmin())
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="link" :href="route('admin.site-settings.index')" :current="request()->routeIs('admin.site-settings.*')" wire:navigate>
                         {{ __('Site Settings') }}
                     </flux:sidebar.item>
+                    @endif
                     <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="envelope" :href="route('admin.newsletters.index')" :current="request()->routeIs('admin.newsletters.*')" wire:navigate>
                         {{ __('Newsletters') }}
                     </flux:sidebar.item>
@@ -68,9 +70,11 @@
                             <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="users" :href="route('admin.shop-users.index')" :current="request()->routeIs('admin.shop-users.*')" wire:navigate>
                                 {{ __('Shop Users') }}
                             </flux:sidebar.item>
+                            @if(auth()->user()->isSuperAdmin())
                             <flux:sidebar.item class="text-white/80 hover:text-[#ffe599] hover:bg-white/10" icon="shield-check" :href="route('admin.staff.index')" :current="request()->routeIs('admin.staff.*')" wire:navigate>
                                 {{ __('Staff Users') }}
                             </flux:sidebar.item>
+                            @endif
                         </div>
                     </details>
                 </flux:sidebar.group>
