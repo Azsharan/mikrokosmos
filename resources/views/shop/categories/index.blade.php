@@ -1,6 +1,6 @@
 <x-layouts::shop :title="__('Colecciones')">
 
-    <section class="bg-[#6b70c4]">
+    <section class="bg-[#b184db]">
         <div class="mx-auto w-full max-w-6xl px-4 py-14 lg:px-8">
             <p class="text-xs font-semibold uppercase tracking-[0.25em] text-white">{{ __('Catálogo') }}</p>
             <h1 class="mt-2 text-4xl font-bold text-white">{{ __('Colecciones') }}</h1>
@@ -19,20 +19,20 @@
             @else
                 <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($categories as $category)
-                        <a href="{{ route('shop.categories.show', $category) }}" class="group flex flex-col gap-4 rounded-2xl border border-[#dddeff] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#6b70c4] hover:shadow-md" wire:navigate>
+                        <a href="{{ route('shop.categories.show', $category) }}" class="group flex flex-col gap-4 rounded-2xl border border-[#dddeff] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#b184db] hover:shadow-md" wire:navigate>
                             <div class="flex items-center justify-between">
-                                <span class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6b70c4]">{{ __('Colección') }}</span>
-                                <span class="text-xs font-bold text-[#6b70c4]">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                                <span class="text-xs font-semibold uppercase tracking-[0.25em] text-[#b184db]">{{ __('Colección') }}</span>
+                                <span class="text-xs font-bold text-[#b184db]">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                             </div>
                             <div class="flex-1 space-y-2">
-                                <h2 class="text-xl font-bold text-[#1e2e74] transition group-hover:text-[#6b70c4]">{{ $category->name }}</h2>
+                                <h2 class="text-xl font-bold text-[#8a2ab6] transition group-hover:text-[#b184db]">{{ $category->name }}</h2>
                                 <p class="text-sm text-[#4a4fa8]">
                                     {{ $category->description ? \Illuminate\Support\Str::limit($category->description, 120) : __('Una selección curada de lanzamientos, reposiciones y ediciones especiales.') }}
                                 </p>
                             </div>
                             <div class="flex items-center justify-between border-t border-[#eeeeff] pt-4 text-sm">
                                 <span class="text-[#4a4fa8]">{{ $category->products_count }} {{ __('productos') }}</span>
-                                <span class="font-semibold text-[#6b70c4] transition group-hover:translate-x-1">&rarr;</span>
+                                <span class="font-semibold text-[#b184db] transition group-hover:translate-x-1">&rarr;</span>
                             </div>
                         </a>
                     @endforeach

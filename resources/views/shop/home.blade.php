@@ -7,7 +7,7 @@
 <x-layouts::shop :title="__('Home')">
 
     {{-- Hero --}}
-    <section class="bg-[#6b70c4]">
+    <section class="bg-[#b184db]">
         <div class="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-20 lg:flex-row lg:items-center lg:gap-16 lg:px-8 lg:py-28">
             <div class="flex-1 space-y-6">
                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-white">{{ $appName }}</p>
@@ -18,7 +18,7 @@
                     {{ __('Colecciona, juega y comparte tus pasiones geek con una experiencia curada y humana.') }}
                 </p>
                 <div class="flex flex-wrap gap-3 text-sm">
-                    <a href="#featured" class="rounded-full bg-[#f5a520] px-6 py-3 font-semibold text-[#1e2e74] transition hover:bg-[#ffd978]">
+                    <a href="#featured" class="rounded-full bg-[#f5a520] px-6 py-3 font-semibold text-[#8a2ab6] transition hover:bg-[#ffd978]">
                         {{ __('Ver novedades') }}
                     </a>
                     <a href="{{ route('shop.events.index') }}" class="rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10" wire:navigate>
@@ -33,7 +33,7 @@
                     <ul class="mt-4 space-y-3">
                         @foreach ($sellingPoints as $point)
                             <li class="flex items-center gap-3 text-sm text-white">
-                                <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#f5a520] text-xs font-bold text-[#1e2e74]">
+                                <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#f5a520] text-xs font-bold text-[#8a2ab6]">
                                     {{ $loop->iteration }}
                                 </span>
                                 {{ $point }}
@@ -51,36 +51,36 @@
             <div class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
                 <div class="mb-8 flex items-end justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6b70c4]">{{ __('Novedades') }}</p>
-                        <h2 class="text-3xl font-bold text-[#1e2e74]">{{ __('Productos destacados') }}</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#b184db]">{{ __('Novedades') }}</p>
+                        <h2 class="text-3xl font-bold text-[#8a2ab6]">{{ __('Productos destacados') }}</h2>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#6b70c4] transition hover:border-[#6b70c4] hover:bg-[#eeeeff]" aria-label="{{ __('Anterior') }}" data-slider-prev="featured">&larr;</button>
-                        <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#6b70c4] transition hover:border-[#6b70c4] hover:bg-[#eeeeff]" aria-label="{{ __('Siguiente') }}" data-slider-next="featured">&rarr;</button>
+                        <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#b184db] transition hover:border-[#b184db] hover:bg-[#eeeeff]" aria-label="{{ __('Anterior') }}" data-slider-prev="featured">&larr;</button>
+                        <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#b184db] transition hover:border-[#b184db] hover:bg-[#eeeeff]" aria-label="{{ __('Siguiente') }}" data-slider-next="featured">&rarr;</button>
                     </div>
                 </div>
 
                 <div class="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-slider="featured">
                     @foreach ($featuredProducts as $product)
                         <a href="{{ route('shop.products.show', $product) }}" class="group block w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[30%]" wire:navigate>
-                            <article class="flex h-full flex-col rounded-2xl border border-[#dddeff] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#6b70c4] hover:shadow-md">
+                            <article class="flex h-full flex-col rounded-2xl border border-[#dddeff] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#b184db] hover:shadow-md">
                                 <div class="mb-4 aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#f0eeff]">
                                     @if ($product->image_url)
                                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]">
                                     @else
-                                        <div class="flex h-full w-full items-center justify-center text-xs font-semibold uppercase tracking-widest text-[#6b70c4]">{{ __('Sin imagen') }}</div>
+                                        <div class="flex h-full w-full items-center justify-center text-xs font-semibold uppercase tracking-widest text-[#b184db]">{{ __('Sin imagen') }}</div>
                                     @endif
                                 </div>
                                 <div class="flex flex-1 flex-col gap-2">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#6b70c4]">{{ $product->category?->name ?? __('Colección especial') }}</p>
-                                    <h3 class="text-lg font-bold text-[#1e2e74] transition group-hover:text-[#6b70c4]">{{ $product->name }}</h3>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#b184db]">{{ $product->category?->name ?? __('Colección especial') }}</p>
+                                    <h3 class="text-lg font-bold text-[#8a2ab6] transition group-hover:text-[#b184db]">{{ $product->name }}</h3>
                                     @if ($product->description)
                                         <p class="text-sm text-[#4a4fa8]">{{ \Illuminate\Support\Str::limit($product->description, 100) }}</p>
                                     @endif
                                 </div>
                                 <div class="mt-4 flex items-center justify-between text-sm font-semibold">
-                                    <span class="text-[#6b70c4]">{{ __('Ver detalles') }}</span>
-                                    <span aria-hidden="true" class="text-[#6b70c4] transition group-hover:translate-x-1">&rarr;</span>
+                                    <span class="text-[#b184db]">{{ __('Ver detalles') }}</span>
+                                    <span aria-hidden="true" class="text-[#b184db] transition group-hover:translate-x-1">&rarr;</span>
                                 </div>
                             </article>
                         </a>
@@ -95,20 +95,20 @@
         <div class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
             <div class="mb-8 flex items-end justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#6b70c4]">{{ __('Esta semana') }}</p>
-                    <h2 class="text-3xl font-bold text-[#1e2e74]">{{ __('Agenda semanal') }}</h2>
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#b184db]">{{ __('Esta semana') }}</p>
+                    <h2 class="text-3xl font-bold text-[#8a2ab6]">{{ __('Agenda semanal') }}</h2>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#6b70c4] transition hover:border-[#6b70c4] hover:bg-[#eeeeff]" aria-label="{{ __('Anterior') }}" data-slider-prev="events">&larr;</button>
-                    <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#6b70c4] transition hover:border-[#6b70c4] hover:bg-[#eeeeff]" aria-label="{{ __('Siguiente') }}" data-slider-next="events">&rarr;</button>
+                    <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#b184db] transition hover:border-[#b184db] hover:bg-[#eeeeff]" aria-label="{{ __('Anterior') }}" data-slider-prev="events">&larr;</button>
+                    <button type="button" class="inline-flex size-9 items-center justify-center rounded-full border border-[#dddeff] bg-white text-[#b184db] transition hover:border-[#b184db] hover:bg-[#eeeeff]" aria-label="{{ __('Siguiente') }}" data-slider-next="events">&rarr;</button>
                 </div>
             </div>
 
             <div class="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-slider="events">
                 @foreach ($weeklyDays as $day)
                     <a href="{{ route('shop.events.index', ['month' => $day['date']->format('Y-m'), 'day' => $day['date']->toDateString()]) }}" class="group block w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[30%]" wire:navigate>
-                        <article class="flex h-[22rem] flex-col rounded-2xl border border-[#dddeff] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#6b70c4] hover:shadow-md">
-                            <div class="mb-4 rounded-xl bg-[#6b70c4] px-4 py-3">
+                        <article class="flex h-[22rem] flex-col rounded-2xl border border-[#dddeff] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#b184db] hover:shadow-md">
+                            <div class="mb-4 rounded-xl bg-[#b184db] px-4 py-3">
                                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white">{{ $day['date']->translatedFormat('D') }}</p>
                                 <p class="text-2xl font-bold text-white">{{ $day['date']->translatedFormat('j') }}</p>
                                 <p class="text-xs text-white/70">{{ $day['date']->translatedFormat('F') }}</p>
@@ -119,19 +119,19 @@
                                 @else
                                     @foreach ($day['events']->take(3) as $event)
                                         <div class="rounded-lg border border-[#dddeff] bg-[#f8f7ff] p-3">
-                                            <p class="text-xs font-semibold text-[#6b70c4]">{{ $event->start_at->format('H:i') }}</p>
-                                            <p class="mt-0.5 text-sm font-semibold text-[#1e2e74]">{{ $event->name }}</p>
+                                            <p class="text-xs font-semibold text-[#b184db]">{{ $event->start_at->format('H:i') }}</p>
+                                            <p class="mt-0.5 text-sm font-semibold text-[#8a2ab6]">{{ $event->name }}</p>
                                             <p class="mt-0.5 text-xs text-[#4a4fa8]">{{ $event->is_online ? __('Online') : ($event->location ?? __('En tienda')) }}</p>
                                         </div>
                                     @endforeach
                                     @if ($day['events']->count() > 3)
-                                        <p class="text-xs font-semibold text-[#6b70c4]">+{{ $day['events']->count() - 3 }} {{ __('más') }}</p>
+                                        <p class="text-xs font-semibold text-[#b184db]">+{{ $day['events']->count() - 3 }} {{ __('más') }}</p>
                                     @endif
                                 @endif
                             </div>
                             <div class="mt-4 flex items-center justify-between text-sm font-semibold">
-                                <span class="text-[#6b70c4]">{{ __('Ver en calendario') }}</span>
-                                <span aria-hidden="true" class="text-[#6b70c4] transition group-hover:translate-x-1">&rarr;</span>
+                                <span class="text-[#b184db]">{{ __('Ver en calendario') }}</span>
+                                <span aria-hidden="true" class="text-[#b184db] transition group-hover:translate-x-1">&rarr;</span>
                             </div>
                         </article>
                     </a>
@@ -141,7 +141,7 @@
     </section>
 
     {{-- Shop info --}}
-    <section class="bg-[#1e2e74]">
+    <section class="bg-[#8a2ab6]">
         <div class="mx-auto w-full max-w-6xl px-4 py-16 lg:px-8">
             <div class="mb-10">
                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-[#f5a520]">{{ __('Conócenos') }}</p>
