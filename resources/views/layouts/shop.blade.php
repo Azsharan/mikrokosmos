@@ -25,16 +25,16 @@
     <head>
         @include('partials.head', ['title' => $resolvedTitle])
     </head>
-    <body class="min-h-screen bg-[#faf7ff] text-[#1c0f3f] antialiased">
+    <body class="min-h-screen bg-white text-[#1e2e74] antialiased">
         <div class="flex min-h-screen flex-col">
 
-            <header class="bg-[#1c0f3f] border-b border-white/10">
-                <div class="mx-auto flex w-full max-w-6xl items-center gap-6 px-4 py-3 lg:px-8">
+            <header class="bg-[#1e2e74] border-b border-white/10">
+                <div class="mx-auto flex w-full max-w-6xl items-center gap-6 px-4 py-2 lg:px-8">
                     <x-app-logo href="{{ route('home') }}" class="shrink-0" theme="shop" />
 
                     <nav class="hidden flex-1 items-center gap-6 text-sm font-medium md:flex">
                         @foreach ($storeNavLinks as $link)
-                            <a href="{{ $link['href'] }}" class="text-white/70 transition hover:text-[#f6d98f]">
+                            <a href="{{ $link['href'] }}" class="text-white/70 transition hover:text-white">
                                 {{ $link['label'] }}
                             </a>
                         @endforeach
@@ -45,7 +45,7 @@
                             <a href="{{ route('shop.login') }}" class="font-medium text-white/80 transition hover:text-white">
                                 {{ __('Iniciar sesión') }}
                             </a>
-                            <a href="{{ route('shop.register') }}" class="rounded-full bg-[#e6c45c] px-4 py-2 font-semibold text-[#1c0f3f] transition hover:bg-[#f6d98f]">
+                            <a href="{{ route('shop.register') }}" class="rounded-full bg-[#f5a520] px-4 py-2 font-semibold text-[#1e2e74] transition hover:bg-[#ffd978]">
                                 {{ __('Crear cuenta') }}
                             </a>
                         @else
@@ -74,7 +74,7 @@
                     </button>
                 </div>
 
-                <div id="shop-mobile-menu" class="hidden border-t border-white/10 bg-[#160a30] md:hidden">
+                <div id="shop-mobile-menu" class="hidden border-t border-white/10 bg-[#162060] md:hidden">
                     <div class="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 text-sm">
                         @foreach ($storeNavLinks as $link)
                             <a href="{{ $link['href'] }}" class="rounded-lg px-3 py-2.5 text-white/80 transition hover:bg-white/10 hover:text-white">
@@ -86,7 +86,7 @@
                                 <a href="{{ route('shop.login') }}" class="rounded-lg px-3 py-2.5 text-white/80 transition hover:bg-white/10 hover:text-white">
                                     {{ __('Iniciar sesión') }}
                                 </a>
-                                <a href="{{ route('shop.register') }}" class="rounded-full bg-[#e6c45c] px-4 py-2.5 text-center font-semibold text-[#1c0f3f] transition hover:bg-[#f6d98f]">
+                                <a href="{{ route('shop.register') }}" class="rounded-full bg-[#f5a520] px-4 py-2.5 text-center font-semibold text-[#1e2e74] transition hover:bg-[#ffd978]">
                                     {{ __('Crear cuenta') }}
                                 </a>
                             @else
@@ -125,12 +125,12 @@
                 {{ $slot }}
             </main>
 
-            <footer class="bg-[#1c0f3f] text-white">
+            <footer class="bg-[#1e2e74] text-white">
                 <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm lg:flex-row lg:items-center lg:justify-between lg:px-8">
                     <p class="text-white/50">&copy; {{ now()->year }} {{ config('app.name') }}.</p>
                     <nav class="flex flex-wrap items-center gap-5">
                         @foreach ($storeNavLinks as $link)
-                            <a href="{{ $link['href'] }}" class="text-white/70 transition hover:text-[#f6d98f]">
+                            <a href="{{ $link['href'] }}" class="text-white/70 transition hover:text-white">
                                 {{ $link['label'] }}
                             </a>
                         @endforeach

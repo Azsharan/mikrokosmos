@@ -59,6 +59,6 @@
         <div class="{{ $logoWrapperClasses }}">
             <x-app-logo-icon class="{{ $logoIconClasses }}" />
         </div>
+        <div class="{{ $nameClasses }}">{{ $appName }}</div>
     @endif
-    <div class="{{ $nameClasses }}">{{ $appName }}</div>
 </a>
