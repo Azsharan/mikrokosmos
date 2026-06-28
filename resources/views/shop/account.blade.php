@@ -102,7 +102,7 @@
                     {{ __('Estamos preparando el historial de pedidos, recompensas y la zona de torneos para que tengas todo en un solo lugar.') }}
                 </p>
                 <p class="mt-2 text-sm text-zinc-600">
-                    {{ __('Mientras tanto, si necesitas asistencia escríbenos a hola@mikrokosmos.mx') }}
+                    {{ __('Mientras tanto, si necesitas asistencia escríbenos a hola@mikrokosmos.shop') }}
                 </p>
             </article>
         </div>
